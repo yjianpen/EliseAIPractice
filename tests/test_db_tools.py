@@ -8,6 +8,7 @@ from db_tools import DATA_DIR, format_citations, make_db_tools
 from llm_decide import make_openai_decide
 
 LEASE = next(csv.DictReader((DATA_DIR / "leases.csv").open()))  # first lease in the synthetic data
+WORK_ORDERS = list(csv.DictReader((DATA_DIR / "work_orders.csv").open()))
 
 
 class TestQueryDb(unittest.TestCase):
@@ -35,14 +36,31 @@ class TestQueryDb(unittest.TestCase):
         self.query("SELECT monthly_rent FROM my_lease")  # same records again -> merged into one citation
         for failed in ["SELECT nope FROM my_lease", "DELETE FROM my_lease", "SELECT * FROM my_lease WHERE 0"]:
             self.query(failed)  # errors and empty results are never cited
-        self.assertEqual(self.ledger[0], {"source": "leases.csv", "ids": [LEASE["lease_id"]],
+        self.assertEqual(self.ledger[0], {"source": "leases.csv", "exact": True, "ids": [LEASE["lease_id"]],
                                           "columns": ["lease_type", "monthly_rent"]})
         self.assertEqual(len(self.ledger), 2)
         self.assertEqual(format_citations(self.ledger),
                          f"Sources:\n[1] leases.csv: {LEASE['lease_id']} - lease_type, monthly_rent")
         self.query("SELECT count(*) FROM my_lease JOIN my_unit USING (unit_id)")  # joins cite both tables
         self.assertEqual([e["source"] for e in self.ledger[2:]], ["leases.csv", "units.csv"])
+        self.assertEqual([e["exact"] for e in self.ledger[2:]], [False, False])  # join -> whole record set
+        self.assertIn("(all your records; row lineage unavailable)", format_citations(self.ledger[2:]))
         self.assertEqual(format_citations([]), "")
+
+    def test_filtered_query_cites_only_matching_rows(self):
+        tenant = "T-00329"  # 14 work orders, exactly one of them 'submitted'
+        mine = [w for w in WORK_ORDERS if w["tenant_id"] == tenant]
+        submitted = [w["work_order_id"] for w in mine if w["status"] == "submitted"]
+        tools, _, ledger = make_db_tools(tenant)
+        query = tools["query_db"]
+        query("SELECT topic FROM my_work_orders WHERE status = 'submitted'")
+        query("select count(*) from my_work_orders w where w.status != 'submitted' limit 3")  # alias + aggregate
+        query("SELECT topic FROM my_work_orders WHERE 1 UNION SELECT tenant_id FROM my_work_orders")
+        self.assertEqual(len(submitted), 1)
+        self.assertEqual((ledger[0]["ids"], ledger[0]["exact"]), (submitted, True))
+        self.assertEqual(len(ledger[1]["ids"]), len(mine) - 1)
+        self.assertEqual((len(ledger[2]["ids"]), ledger[2]["exact"]), (len(mine), False))  # compound -> fallback
+        self.assertTrue(format_citations(ledger).startswith(f"Sources:\n[1] work_orders.csv: {submitted[0]} - "))
 
     def test_spec_lists_views_and_columns(self):
         self.assertEqual((self.specs[0]["type"], self.specs[0]["name"]), ("function", "query_db"))

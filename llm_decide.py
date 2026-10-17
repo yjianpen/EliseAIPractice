@@ -39,6 +39,29 @@ def build_input(query: UserQuery, history: list[Step], past_turns: list = ()) ->
     return items
 
 
+def parse_arguments(raw) -> tuple[dict, str | None]:
+    """Parse a tool call's JSON arguments without ever raising; return (arguments, error observation or None).
+    Tolerates what models emit in practice: empty arguments, raw newlines inside strings, code fences or text
+    around the object. Anything else is reported back to the model (which can resend the call) instead of
+    crashing the ReAct loop."""
+    if isinstance(raw, dict):
+        return raw, None
+    text = raw.strip() if isinstance(raw, str) else "" if raw is None else repr(raw)
+    if not text:
+        return {}, None
+    error = "not a JSON object"
+    for candidate in (text, text[text.find("{"):text.rfind("}") + 1]):  # as sent, then just the outermost {...}
+        try:
+            value = json.loads(candidate, strict=False)
+        except json.JSONDecodeError as exc:
+            error = str(exc) if candidate is text else error
+            continue
+        if isinstance(value, dict):
+            return value, None
+    return {}, (f"Error: the tool arguments were not a valid JSON object ({error}): {text[:200]!r}. "
+                "The tool was not run; resend the call with arguments as one JSON object.")
+
+
 def create_with_fallbacks(client, models: list[str], request: dict):
     """Call client.responses.create, adapting to compatibility errors instead of failing the conversation:
     - reasoning not supported by this model/endpoint -> retry the same model without `reasoning`
@@ -93,8 +116,9 @@ def make_openai_decide(tool_specs: list[dict] | None = None, model: str | None =
         if calls:  # one tool call per step; keep the reasoning items so the next request can replay them
             call = calls[0]
             context = [item for item in response.output if item.type != "function_call" or item is call]
-            return Step(action=call.name, action_input=json.loads(call.arguments or "{}"), tokens_used=tokens,
-                        context=context)
+            action_input, error = parse_arguments(call.arguments)  # dirty JSON -> error observation, never a crash
+            return Step(action=call.name, action_input=action_input, tokens_used=tokens, context=context,
+                        observation=error)
         return Step(final_answer=response.output_text or "", tokens_used=tokens)
 
     return decide

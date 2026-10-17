@@ -78,4 +78,5 @@ def run_react_loop(query: UserQuery, decide: Decide, tools: dict[str, Callable[.
         steps.append(step)
         if step.final_answer is not None:
             return result(StopReason.ANSWERED, step.final_answer)
-        step.observation = run_tool(step, tools)
+        if step.observation is None:  # decide() pre-fills an error (e.g. unparseable arguments): don't run the tool
+            step.observation = run_tool(step, tools)

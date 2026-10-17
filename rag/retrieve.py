@@ -229,8 +229,10 @@ def render_context(ctx: dict) -> str:
     p, c = ctx["property"], ctx["company"]
     out = [f"PROPERTY: {p['name']} ({p['property_id']}), {p['address']} | company: {c['name']}",
            f"Built {p['year_built']}, {p['units']} units, elevator={p['has_elevator']}, heat: {p['heat_system']} "
-           f"(controlled by {p['heat_controlled_by']}) | on-site: {p['super_name']} {p['super_phone']} | "
-           f"emergency line: {c['emergency_line']}"]
+           f"(controlled by {p['heat_controlled_by']}) | on-site: {p['site_contact']} {p['site_phone']} | "
+           f"emergency line: {p['emergency_line']}",
+           "DATA NOTE: operator and building are real; operating details, contacts, phone numbers and policies are "
+           f"synthetic practice data (building facts verified {p['verified_on']})."]
     if ctx["unit"]:
         out.append(f"UNIT: {ctx['unit']['unit_id']}")
     out.append(f"TOPICS: {', '.join(ctx['topics']) or '(none detected)'} | URGENCY: {ctx['urgency'] or 'n/a'}")

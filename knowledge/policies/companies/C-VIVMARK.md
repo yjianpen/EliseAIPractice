@@ -1,13 +1,15 @@
 ---
-doc_id: guidebook-c-lumen
+doc_id: guidebook-c-vivmark
 scope: company
-company_id: C-LUMEN
-title: Lumen Park Residential - Resident Guidebook
-version: 2026-10 (synthetic)
+company_id: C-VIVMARK
+title: Vivmark Residential - Resident Guidebook (practice)
+version: 2026-10 (synthetic practice document)
 ---
-# Lumen Park Residential - Resident Guidebook
+# Vivmark Residential - Resident Guidebook (practice)
 
-Synthetic guidebook for practice. It applies to every Lumen Park building. Sections marked for one city apply only
+> SYNTHETIC PRACTICE DOCUMENT. Vivmark Residential is a real company, but this guidebook was written for interview practice. It is not Vivmark Residential's actual resident policy; service standards, credits and procedures are invented, and phone numbers are fictional.
+
+Practice guidebook for Vivmark buildings in New York City and San Francisco. Sections marked for one city apply only
 there. A property addendum for your building overrides this guidebook where they differ.
 
 ## How to request maintenance
@@ -48,7 +50,7 @@ thermometer reading, the time, and whether radiators are cold or just warm.
 
 ## Heat and hot water - San Francisco
 <!-- topics: heat, hot_water | cities: San Francisco -->
-Where Lumen controls the heat, every habitable room must be able to reach 70F at any time of day. Where you control
+Where Vivmark controls the heat, every habitable room must be able to reach 70F at any time of day. Where you control
 your own heater, report equipment that does not heat as an urgent repair. Hot and cold running water must work at
 all fixtures; report no hot water as an emergency.
 
@@ -110,7 +112,7 @@ your lease. Report peeling or chipping paint right away and do not sand or scrap
 Default quiet hours are 10 PM to 8 AM unless your property addendum says otherwise. For repeated noise from another
 apartment, send the dates, times and a description through the portal. We contact the other household and, if it
 continues, enforce the lease. For noise happening right now that feels unsafe, call the police non-emergency line
-or 911. Construction or renovation work by Lumen happens only on weekdays from 8 AM to 5 PM unless it is an emergency.
+or 911. Construction or renovation work by Vivmark happens only on weekdays from 8 AM to 5 PM unless it is an emergency.
 
 ## Garbage, recycling and bulk items
 <!-- topics: garbage, pests | cities: all -->
@@ -134,6 +136,6 @@ maintenance line.
 
 ## No retaliation
 <!-- topics: retaliation, repairs_timeline | cities: all -->
-Lumen will never penalize you for requesting repairs, reporting conditions to the city, or joining a tenant
+Vivmark will never penalize you for requesting repairs, reporting conditions to the city, or joining a tenant
 association. If you believe a staff member has treated you unfairly after a complaint, contact the regional manager
 at the office email.

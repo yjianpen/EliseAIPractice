@@ -14,6 +14,7 @@ WORK_ORDERS = list(csv.DictReader((DATA_DIR / "work_orders.csv").open()))
 class TestQueryDb(unittest.TestCase):
     def setUp(self):
         tools, self.specs, self.ledger = make_db_tools(LEASE["tenant_id"])
+        self.addCleanup(tools["query_db"].close)
         self.query = tools["query_db"]
 
     def test_reads_own_lease(self):
@@ -52,6 +53,7 @@ class TestQueryDb(unittest.TestCase):
         mine = [w for w in WORK_ORDERS if w["tenant_id"] == tenant]
         submitted = [w["work_order_id"] for w in mine if w["status"] == "submitted"]
         tools, _, ledger = make_db_tools(tenant)
+        self.addCleanup(tools["query_db"].close)
         query = tools["query_db"]
         query("SELECT topic FROM my_work_orders WHERE status = 'submitted'")
         query("select count(*) from my_work_orders w where w.status != 'submitted' limit 3")  # alias + aggregate
@@ -75,6 +77,7 @@ class TestQueryDb(unittest.TestCase):
         client = NS(responses=NS(create=lambda **kw: (lambda items, text: NS(
             output=items, output_text=text, usage=NS(total_tokens=10)))(*next(replies))))
         tools, specs, ledger = make_db_tools(LEASE["tenant_id"])
+        self.addCleanup(tools["query_db"].close)
         memory = ConversationMemory()
         decide = make_openai_decide(tool_specs=specs, client=client, model="test", memory=memory)
         r = respond("How much is my monthly rent?", LEASE["tenant_id"], memory, decide, tools, ledger)

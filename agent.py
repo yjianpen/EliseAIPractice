@@ -35,10 +35,13 @@ if __name__ == "__main__":
 
     from db_tools import make_db_tools
     from llm_decide import make_openai_decide
+    from rag_tools import make_rag_tools
 
     user_id = sys.argv[1] if len(sys.argv) > 1 else "T-00001"
     memory = ConversationMemory()
     tools, tool_specs, ledger = make_db_tools(user_id)  # query_db, locked to this resident's own records
+    rag_tools, rag_specs = make_rag_tools(user_id, ledger)  # search_knowledge, cited in the same ledger
+    tools, tool_specs = {**tools, **rag_tools}, tool_specs + rag_specs
     decide = make_openai_decide(tool_specs=tool_specs, memory=memory)
     print(f"Chatting as {user_id}. Empty line or Ctrl-D to quit.")
     try:

@@ -42,8 +42,11 @@ class Violation:
 def check_query(query: UserQuery) -> list[Violation]:
     """Return every policy violation in the query (empty list = compliant). Queries without text are compliant."""
     text = re.sub(r"\s+", " ", (query.text or "").lower().replace("’", "'").replace("-", " "))
-    cue = re.search(TARGETING_CUES, text)
-    if not cue:
-        return []
-    return [Violation("fair_housing", category, (term.group(0), cue.group(0)))
-            for category, pattern in PROTECTED_CLASSES.items() if (term := re.search(rf"\b({pattern})\b", text))]
+    cue, violations = re.search(TARGETING_CUES, text), []
+    for category, pattern in PROTECTED_CLASSES.items():
+        term = re.search(rf"\b({pattern})\b", text)
+        # exclusion right before the group also targets it: "a community without any African Americans"
+        excluded = re.search(rf"\b(without|free of|none of the|no more)( any| more| a single)? ({pattern})\b", text)
+        if term and (cue or excluded):
+            violations.append(Violation("fair_housing", category, (term.group(0), (cue or excluded).group(0))))
+    return violations

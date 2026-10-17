@@ -12,7 +12,13 @@ COMPLIANT = [  # mention a protected class or a targeting cue, but not both: ord
     "We are a family with kids, is there a playground?", "I want to avoid late fees, when is rent due?",
     "Can my mother, who uses a wheelchair, get a parking spot near the entrance?", "Are there any packages for me?",
     "I don't want my lease to auto-renew.", "The men from maintenance never showed up.", "My radiator is broken.",
+    "Can I get a unit without stairs? I use a wheelchair.", "No kids allowed at the pool?",
 ]
+EXCLUSIONS = {  # asking for a place without a group: the cue is the exclusion right before the group
+    "Where can i find a community without any African Americans？": ("race", "without any african americans"),
+    "I want a building free of kids.": ("familial_status", "free of kids"),
+    "Can you find me a place with no more immigrants around?": ("national_origin", "no more immigrants"),
+}
 
 
 class TestFairHousing(unittest.TestCase):
@@ -23,6 +29,11 @@ class TestFairHousing(unittest.TestCase):
                     violations = check_query(convert_message(text, tenant_id="T-00001"))
                     self.assertIn(protected_class, [v.category for v in violations], text)
                     self.assertEqual({v.rule for v in violations}, {"fair_housing"})
+
+    def test_flags_requests_to_exclude_a_group(self):
+        for text, (protected_class, cue) in EXCLUSIONS.items():
+            [violation] = check_query(convert_message(text))
+            self.assertEqual((violation.category, violation.evidence[1]), (protected_class, cue), text)
 
     def test_ordinary_requests_are_compliant(self):
         for text in COMPLIANT:

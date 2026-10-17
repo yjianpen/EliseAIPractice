@@ -5,16 +5,20 @@ asks a TOPICS question as the lease's tenant, giving tenant id, lease id and apa
 value on file plus a citation of the record it came from. Runs the real agent (OpenAI model + query_db +
 search_knowledge), so it needs OPENAI_API_KEY (see config.py). The run ends with two metrics: answer accuracy
 (overall and per topic, plus citation accuracy) and token usage (total, mean and max per case).
-  python -m evals.happy_path                                    # 40 cases over all topics
-  python -m evals.happy_path --num-tests 5 --topics monthly_rent --lease-ids L-00001 L-00002
+Generated cases are saved to evals/happy_path_cases.json and reused on later runs, so every run asks the same
+questions about the same leases; pass --regenerate (with any generator args) to draw a new set and overwrite it.
+  python -m evals.happy_path                  # reuse the saved cases (generates 40 over all topics if none saved)
+  python -m evals.happy_path --regenerate --num-tests 5 --topics monthly_rent --lease-ids L-00001 L-00002
 """
 from __future__ import annotations
 
 import argparse
+import json
 import random
 import re
 import sys
 from datetime import date
+from pathlib import Path
 
 from agent import respond
 from conversation_memory import ConversationMemory
@@ -32,6 +36,7 @@ TOPICS = {  # topic -> (question, source table, column whose value the answer mu
     "bedrooms": ("How many bedrooms does my apartment have?", "units", "bedrooms"),
     "square_footage": ("How many square feet is my apartment?", "units", "sqft"),
 }
+CASES_FILE = Path(__file__).resolve().parent / "happy_path_cases.json"
 NUMBER_WORDS = "zero one two three four five six".split()
 
 
@@ -70,7 +75,15 @@ def generate_evals(num_tests_generate: int = 40, lease_ids: list[str] | None = N
     return cases
 
 
-EVALS = generate_evals()
+def load_or_generate_evals(path: Path = CASES_FILE, regenerate: bool = False, **generator_args) -> list[dict]:
+    """Return the cases saved at `path`; generate (with `generator_args`) and save them only if none are saved yet
+    or `regenerate` is set. Saved one case per line, with the args that produced them, so diffs stay readable."""
+    if path.exists() and not regenerate:
+        return json.loads(path.read_text())["cases"]
+    cases = generate_evals(**generator_args)
+    lines = ",\n".join(f"  {json.dumps(case)}" for case in cases)
+    path.write_text(f'{{"args": {json.dumps(generator_args)},\n "cases": [\n{lines}\n]}}\n')
+    return cases
 
 
 def run_eval(case: dict, **decide_kwargs) -> tuple[str, list[str], int]:
@@ -94,12 +107,19 @@ def run_eval(case: dict, **decide_kwargs) -> tuple[str, list[str], int]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--cases", type=Path, default=CASES_FILE, help="saved cases to reuse (default: %(default)s)")
+    parser.add_argument("--regenerate", action="store_true", help="generate new cases and overwrite --cases")
     parser.add_argument("--num-tests", type=int, default=40)
     parser.add_argument("--lease-ids", nargs="+")
     parser.add_argument("--topics", nargs="+", choices=list(TOPICS))
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args()
-    cases = generate_evals(args.num_tests, args.lease_ids, args.topics, args.seed)
+    reuse = args.cases.exists() and not args.regenerate
+    gen_args = dict(num_tests_generate=args.num_tests, lease_ids=args.lease_ids, topics=args.topics, seed=args.seed)
+    cases = load_or_generate_evals(args.cases, args.regenerate, **gen_args)
+    custom = any(getattr(args, k) != parser.get_default(k) for k in ("num_tests", "lease_ids", "topics", "seed"))
+    print(f"{'loaded' if reuse else 'generated and saved'} {len(cases)} cases {'from' if reuse else 'to'} {args.cases}"
+          + (" (generator args ignored; pass --regenerate to use them)" if reuse and custom else ""))
     failed, tokens, by_topic, cited = 0, [], {}, 0  # by_topic: topic -> [answers correct, cases]
     for case in cases:
         answer, failures, used = run_eval(case)

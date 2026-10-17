@@ -1,4 +1,4 @@
-# Eval metrics: token usage and answer accuracy
+# Eval metrics (token usage, answer accuracy) and saved eval cases
 
 `python -m evals.happy_path` now ends every run with two metrics:
 
@@ -15,8 +15,13 @@ token usage: total 1,656 | mean 207/case | max 214
 - **Token usage:** the tokens each case used (`LoopResult.tokens_used`, summed over every model call in the ReAct loop).
   Each case's PASS/FAIL line shows its own count; the summary shows the total, mean and max.
 - `run_eval` now returns `(answer, failures, tokens_used)`.
+- **Saved cases:** a run reuses `evals/happy_path_cases.json` (committed: the 40 default cases, one per line) instead of
+  generating new ones, so every run and every machine asks the same questions about the same leases. The generator
+  runs only when no file is saved yet, or when you pass `--regenerate`; it then saves the result, plus the args that
+  produced it. `--cases PATH` picks a different file. Generator args passed without `--regenerate` while a file
+  exists are ignored, and the run says so.
 
-Changed functions: `run_eval` and `main` (updated). The sample output above is from an offline run of `main()` with a
+Changed functions: `load_or_generate_evals` (new); `run_eval` and `main` (updated). The sample output above is from an offline run of `main()` with a
 fake model that answers every other case correctly. Not yet run against the real OpenAI model.
 
 ## Test locally (Mac)
@@ -27,11 +32,19 @@ Needs `OPENAI_API_KEY` in `.env` at the repo root. All 40 cases:
 .venv/bin/python -m evals.happy_path
 ```
 
-Custom inputs: choose your own cases, then check the metrics block at the end:
+The first line should say `loaded 40 cases from .../evals/happy_path_cases.json`.
+
+Custom inputs: generate your own cases into a separate file (so the committed 40 stay untouched), then rerun to reuse them:
 
 ```bash
-.venv/bin/python -m evals.happy_path --num-tests 6 --topics monthly_rent bedrooms --lease-ids L-00001 L-00002 L-00003
+.venv/bin/python -m evals.happy_path --cases /tmp/my_cases.json --regenerate --num-tests 6 --topics monthly_rent bedrooms --lease-ids L-00001 L-00002 L-00003
 ```
+
+```bash
+.venv/bin/python -m evals.happy_path --cases /tmp/my_cases.json
+```
+
+The first command prints `generated and saved 6 cases`; the second prints `loaded 6 cases` and asks the same questions.
 
 One case of your own, with its token count:
 

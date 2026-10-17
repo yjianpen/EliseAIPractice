@@ -1,24 +1,75 @@
-"""Happy-path eval: a resident identifies themselves fully and asks for their monthly rent.
+"""Happy-path evals: a resident identifies themselves fully and asks about one fact on file.
 
-Runs the real agent (OpenAI model + query_db + search_knowledge) and checks that the answer states the rent on
-file in data/synthetic/leases.csv and cites the lease record it came from. Needs OPENAI_API_KEY (see config.py).
-  python -m evals.happy_path
+Cases are generated from the synthetic data (data/synthetic/leases.csv, units.csv), never handwritten: each one
+asks a TOPICS question as the lease's tenant, giving tenant id, lease id and apartment number, and expects the
+value on file plus a citation of the record it came from. Runs the real agent (OpenAI model + query_db +
+search_knowledge), so it needs OPENAI_API_KEY (see config.py).
+  python -m evals.happy_path                                    # 40 cases over all topics
+  python -m evals.happy_path --num-tests 5 --topics monthly_rent --lease-ids L-00001 L-00002
 """
 from __future__ import annotations
 
+import argparse
+import random
+import re
 import sys
+from datetime import date
 
 from agent import respond
 from conversation_memory import ConversationMemory
 from db_tools import make_db_tools
 from llm_decide import make_openai_decide
+from rag.retrieve import _table
 from rag_tools import make_rag_tools
 
-EVALS = [  # expected values are copied from data/synthetic/leases.csv and units.csv
-    {"name": "monthly_rent_with_ids", "user_id": "T-00001",
-     "message": "Hi, this is tenant T-00001, lease L-00001, apartment 1A. What is my monthly rent?",
-     "expect_in_answer": ["3320"], "expect_cited": ["leases.csv: L-00001", "monthly_rent"]},
-]
+TOPICS = {  # topic -> (question, source table, column whose value the answer must state)
+    "monthly_rent": ("What is my monthly rent?", "leases", "monthly_rent"),
+    "security_deposit": ("How much was my security deposit?", "leases", "security_deposit"),
+    "lease_start_date": ("When did my lease start?", "leases", "start_date"),
+    "lease_end_date": ("When does my lease end?", "leases", "end_date"),
+    "lease_type": ("What type of lease do I have?", "leases", "lease_type"),
+    "bedrooms": ("How many bedrooms does my apartment have?", "units", "bedrooms"),
+    "square_footage": ("How many square feet is my apartment?", "units", "sqft"),
+}
+NUMBER_WORDS = "zero one two three four five six".split()
+
+
+def generate_evals(num_tests_generate: int = 40, lease_ids: list[str] | None = None,
+                   topics: list[str] | None = None, seed: int = 0) -> list[dict]:
+    """Build eval cases, cycling through `topics` over leases drawn (deterministically, by `seed`) from `lease_ids`."""
+    leases, units = {lease["lease_id"]: lease for lease in _table("leases")}, {}
+    for u in _table("units"):
+        units.setdefault(u["unit_id"], []).append(u)
+    if lease_ids is None:  # units.csv has a few unit ids with conflicting rows: no single right answer there
+        lease_ids = [i for i, lease in leases.items() if len(units[lease["unit_id"]]) == 1]
+    unknown = (set(lease_ids) - leases.keys()) | (set(topics or ()) - TOPICS.keys())
+    if unknown:
+        raise ValueError(f"unknown lease ids or topics: {sorted(unknown)}")
+    topics, rng = list(topics or TOPICS), random.Random(seed)
+    picked = (rng.sample(lease_ids, num_tests_generate) if num_tests_generate <= len(lease_ids)
+              else rng.choices(lease_ids, k=num_tests_generate))
+    cases = []
+    for i, lease_id in enumerate(picked):
+        topic, lease = topics[i % len(topics)], leases[lease_id]
+        question, table, column = TOPICS[topic]
+        unit = units[lease["unit_id"]][0]
+        row, record_id = (lease, lease_id) if table == "leases" else (unit, unit["unit_id"])
+        value = row[column]
+        if column.endswith("_date"):  # accept the usual ways of writing a date
+            d = date.fromisoformat(value)
+            expected = [value, f"{d:%B} {d.day} {d.year}", f"{d:%b} {d.day} {d.year}", f"{d.month}/{d.day}/{d.year}"]
+        elif column == "bedrooms":
+            expected = [f"{value} bedroom", f"{NUMBER_WORDS[int(value)]} bedroom"] + (["studio"] * (value == "0"))
+        else:
+            expected = [value]
+        cases.append({"name": f"{topic}_{lease_id}", "user_id": lease["tenant_id"],
+                      "message": f"Hi, this is tenant {lease['tenant_id']}, lease {lease_id}, apartment "
+                                 f"{unit['unit_number']}. {question}",
+                      "expect_any_of": expected, "expect_cited": [f"{table}.csv", record_id, column]})
+    return cases
+
+
+EVALS = generate_evals()
 
 
 def run_eval(case: dict, **decide_kwargs) -> tuple[str, list[str]]:
@@ -32,18 +83,27 @@ def run_eval(case: dict, **decide_kwargs) -> tuple[str, list[str]]:
     finally:
         tools["query_db"].close()
     body, _, sources = answer.partition("\n\nSources:\n")
-    failures = [f"answer lacks {s!r}" for s in case["expect_in_answer"] if s not in body.replace(",", "")]
+    norm = lambda s: re.sub(r"(\d)(st|nd|rd|th)\b", r"\1", s.lower().replace(",", "").replace("-", " "))  # noqa: E731
+    failures = [] if any(norm(e) in norm(body) for e in case["expect_any_of"]) else [
+        f"answer lacks any of {case['expect_any_of']}"]
     failures += [f"sources lack {s!r}" for s in case["expect_cited"] if s not in sources]
     return answer, failures
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--num-tests", type=int, default=40)
+    parser.add_argument("--lease-ids", nargs="+")
+    parser.add_argument("--topics", nargs="+", choices=list(TOPICS))
+    parser.add_argument("--seed", type=int, default=0)
+    args = parser.parse_args()
+    cases = generate_evals(args.num_tests, args.lease_ids, args.topics, args.seed)
     failed = 0
-    for case in EVALS:
+    for case in cases:
         answer, failures = run_eval(case)
         failed += bool(failures)
-        print(f"{'FAIL' if failures else 'PASS'} {case['name']}: {'; '.join(failures) or 'ok'}\n{answer}\n")
-    print(f"{len(EVALS) - failed}/{len(EVALS)} passed")
+        print(f"{'FAIL' if failures else 'PASS'} {case['name']}" + (f": {'; '.join(failures)}\n{answer}\n" * bool(failures)))
+    print(f"{len(cases) - failed}/{len(cases)} passed")
     return 1 if failed else 0
 
 

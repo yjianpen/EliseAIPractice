@@ -1,7 +1,7 @@
 """One conversational exchange: raw message in, answer out, remembered per user for the memory window.
 
 Chat locally (needs OPENAI_API_KEY in .env); the agent remembers your last 2 hours within this session:
-  python agent.py T-00334
+  python agent.py T-00001       # a tenant_id from data/synthetic/tenants.csv; the agent can query their records
 """
 from __future__ import annotations
 
@@ -27,15 +27,17 @@ def respond(text: str, user_id: str, memory: ConversationMemory, decide: Decide,
 if __name__ == "__main__":
     import sys
 
+    from db_tools import make_db_tools
     from llm_decide import make_openai_decide
 
-    user_id = sys.argv[1] if len(sys.argv) > 1 else "T-demo"
+    user_id = sys.argv[1] if len(sys.argv) > 1 else "T-00001"
     memory = ConversationMemory()
-    decide = make_openai_decide(memory=memory)
+    tools, tool_specs = make_db_tools(user_id)  # query_db, locked to this resident's own records
+    decide = make_openai_decide(tool_specs=tool_specs, memory=memory)
     print(f"Chatting as {user_id}. Empty line or Ctrl-D to quit.")
     try:
         while text := input("you> ").strip():
-            r = respond(text, user_id, memory, decide)
+            r = respond(text, user_id, memory, decide, tools)
             print(f"agent> {r.answer or '(no answer - hand off to the leasing office)'}  [{r.stop_reason.value}]")
     except (EOFError, KeyboardInterrupt):
         print()

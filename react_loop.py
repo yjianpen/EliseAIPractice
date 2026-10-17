@@ -32,6 +32,7 @@ class Step:
     final_answer: str | None = None
     tokens_used: int = 0                # tokens this decide() call consumed
     observation: str | None = None      # filled in by the loop after running the tool
+    context: list = field(default_factory=list)  # model items to replay next turn (e.g. reasoning + tool call)
 
 
 @dataclass

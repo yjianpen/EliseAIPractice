@@ -11,9 +11,9 @@ def recording_client(*answers):
     replies, prompts = iter(answers), []
 
     def create(**kwargs):
-        prompts.append(kwargs["messages"])
-        return NS(choices=[NS(message=NS(content=next(replies), tool_calls=None))], usage=NS(total_tokens=10))
-    return NS(chat=NS(completions=NS(create=create))), prompts
+        prompts.append(kwargs["input"])
+        return NS(output=[], output_text=next(replies), usage=NS(total_tokens=10))
+    return NS(responses=NS(create=create)), prompts
 
 
 class TestAgentMemory(unittest.TestCase):
@@ -25,7 +25,7 @@ class TestAgentMemory(unittest.TestCase):
     def test_second_message_sees_first_exchange(self):
         respond("When do lease renewals go out?", "T-1", self.memory, self.decide)
         respond("And when does my lease end?", "T-1", self.memory, self.decide)
-        second = [(m["role"], m["content"]) for m in self.prompts[1][1:3]]
+        second = [(m["role"], m["content"]) for m in self.prompts[1][0:2]]
         self.assertEqual(second, [("user", "When do lease renewals go out?"),
                                   ("assistant", "Renewals go out 90 days early.")])
         self.assertEqual(len(self.memory.recent("T-1")), 4)
@@ -34,7 +34,7 @@ class TestAgentMemory(unittest.TestCase):
         respond("When do lease renewals go out?", "T-1", self.memory, self.decide)
         respond("Hello", "T-2", self.memory, self.decide)
         roles = [m["role"] for m in self.prompts[1]]
-        self.assertEqual(roles, ["system", "user"])  # T-2 sees no T-1 turns
+        self.assertEqual(roles, ["user"])  # T-2 sees no T-1 turns
         self.assertNotIn("renewals", str(self.prompts[1]).lower())
 
     def test_current_message_not_duplicated(self):

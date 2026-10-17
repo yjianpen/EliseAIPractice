@@ -1,0 +1,17 @@
+{
+  "jurisdiction": {"level": "federal", "city": null, "state": null},
+  "disclaimer": "Plain-language summaries for an AI assistant to cite. Not legal advice; always link the source.",
+  "laws": [
+    {
+      "id": "us-lead-disclosure",
+      "citation": "42 U.S.C. § 4852d; 40 CFR Part 745 Subpart F; 24 CFR Part 35 Subpart A",
+      "title": "Lead-based paint disclosure for pre-1978 housing",
+      "topics": ["lead", "paint_plaster"],
+      "summary": "Before a tenant signs a lease for housing built before 1978, the landlord must disclose any known lead-based paint or hazards and available records, give the EPA pamphlet 'Protect Your Family From Lead in Your Home', and include a lead warning statement in the lease. The landlord keeps signed disclosure records for 3 years.",
+      "key_points": ["Housing built before 1978", "Disclose known lead information", "EPA pamphlet", "Lead warning statement in lease"],
+      "source_url": "https://www.epa.gov/lead/real-estate-disclosure",
+      "verified_on": null,
+      "verification_note": "Summarized from general knowledge; EPA page not re-checked in this pass."
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+company_id,name,hq_city,resident_portal,emergency_line,office_email
+C-LUMEN,Lumen Park Residential (synthetic),New York,https://portal.lumenpark.example.com,212-555-0100,residents@lumenpark.example.com
+C-BAYLINE,Bayline Homes (synthetic),San Francisco,https://residents.bayline.example.com,415-555-0100,help@bayline.example.com

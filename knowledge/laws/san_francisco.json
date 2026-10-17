@@ -1,0 +1,26 @@
+{
+  "jurisdiction": {"level": "city", "city": "San Francisco", "state": "CA"},
+  "disclaimer": "Plain-language summaries for an AI assistant to cite. Not legal advice; always link the source.",
+  "laws": [
+    {
+      "id": "sf-heat",
+      "citation": "San Francisco Housing Code (minimum heat requirements, as amended January 20, 2020)",
+      "title": "Minimum heat requirements",
+      "topics": ["heat"],
+      "summary": "Residential rental units (other than residential hotel rooms) must have a permanent heat source able to keep every habitable room at 70F, measured 3 feet above the floor; bathrooms and hallways are excluded. If the tenant does not control the heat, the landlord must provide it 24 hours a day. Residential hotel rooms must be kept at 68F for 13 hours a day: 5-11 AM and 3-10 PM. Portable heaters do not satisfy the requirement.",
+      "key_points": ["70F in habitable rooms, measured 3 ft above floor", "24 hours a day when landlord controls heat", "Hotel rooms: 68F, 5-11 AM and 3-10 PM", "Portable heaters don't count"],
+      "source_url": "https://www.sf.gov/information/minimum-heat-requirements",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "sf-noise",
+      "citation": "San Francisco Police Code, Article 29, §§ 2908, 2909",
+      "title": "Residential noise limits and night construction",
+      "topics": ["noise"],
+      "summary": "A person may not produce or allow noise from machines, devices, music or entertainment on residential property that exceeds the ambient level by more than 5 dBA at any point outside the property plane (§ 2909(a)(1)). Construction noise more than 5 dBA above ambient at the nearest property plane is prohibited between 8 PM and 7 AM without a special permit, except emergency work (§ 2908).",
+      "key_points": ["Residential: max 5 dBA above ambient at property plane", "Night construction 8 PM-7 AM needs a permit", "Emergency work exempt"],
+      "source_url": "https://nonoise.org/lawlib/cities/ordinances/San%20Francisco,%20California.pdf",
+      "verified_on": "2026-10-16"
+    }
+  ]
+}

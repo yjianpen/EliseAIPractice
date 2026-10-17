@@ -1,0 +1,624 @@
+{
+  "_about": "Issue taxonomy shared by the synthetic data generator and the RAG retriever. Each topic links 311 (problem, detail) pairs to the policy-guidebook sections and law records tagged with the same topic. 'keywords' drive topic detection on free-text tenant messages. 'urgency' is the default triage level: emergency = escalate to a human / 911 now, urgent = same-day work order, routine = normal work order, city = handled by a city agency, not the landlord.",
+  "categories": {
+    "essential_services": "Heat, hot water, water supply, gas and power",
+    "habitability_repairs": "Repairs to the unit and building",
+    "health_hazards": "Pests, mold, lead and other health conditions",
+    "safety_devices": "Smoke/CO alarms, window guards, fire escapes",
+    "quality_of_life": "Noise, garbage, neighbors, snow",
+    "tenancy_rights": "Entry, retaliation, habitability claims",
+    "city_services": "Street-level issues the landlord does not control"
+  },
+  "topics": {
+    "heat": {
+      "category": "essential_services",
+      "urgency": "emergency",
+      "keywords": [
+        "heat",
+        "heating",
+        "radiator",
+        "boiler",
+        "cold",
+        "freezing",
+        "thermostat",
+        "no heat",
+        "heater",
+        "heaters",
+        "furnace",
+        "space heater",
+        "warm enough",
+        "chilly"
+      ],
+      "nyc_311": [
+        [
+          "HEAT/HOT WATER",
+          "ENTIRE BUILDING"
+        ],
+        [
+          "HEAT/HOT WATER",
+          "APARTMENT ONLY"
+        ],
+        [
+          "PLUMBING",
+          "RADIATOR"
+        ]
+      ]
+    },
+    "hot_water": {
+      "category": "essential_services",
+      "urgency": "emergency",
+      "keywords": [
+        "hot water",
+        "water heater",
+        "lukewarm",
+        "cold water only",
+        "no hot water",
+        "shower is cold",
+        "water is cold"
+      ],
+      "nyc_311": [
+        [
+          "HEAT/HOT WATER",
+          "ENTIRE BUILDING"
+        ],
+        [
+          "HEAT/HOT WATER",
+          "APARTMENT ONLY"
+        ]
+      ]
+    },
+    "water_supply": {
+      "category": "essential_services",
+      "urgency": "emergency",
+      "keywords": [
+        "no water",
+        "water pressure",
+        "water supply",
+        "water shut off",
+        "brown water"
+      ],
+      "nyc_311": [
+        [
+          "PLUMBING",
+          "WATER SUPPLY"
+        ]
+      ]
+    },
+    "gas": {
+      "category": "essential_services",
+      "urgency": "emergency",
+      "keywords": [
+        "gas",
+        "gas smell",
+        "smell gas",
+        "gas leak",
+        "stove gas",
+        "cooking gas",
+        "gas shut off"
+      ],
+      "nyc_311": [
+        [
+          "GENERAL",
+          "COOKING GAS"
+        ]
+      ]
+    },
+    "electrical": {
+      "category": "essential_services",
+      "urgency": "urgent",
+      "keywords": [
+        "power",
+        "outage",
+        "electricity",
+        "outlet",
+        "switch",
+        "wiring",
+        "sparks",
+        "lights",
+        "lighting",
+        "breaker",
+        "no power",
+        "power out",
+        "electrical"
+      ],
+      "nyc_311": [
+        [
+          "ELECTRIC",
+          "POWER OUTAGE"
+        ],
+        [
+          "ELECTRIC",
+          "OUTLET/SWITCH"
+        ],
+        [
+          "ELECTRIC",
+          "NO LIGHTING"
+        ],
+        [
+          "ELECTRIC",
+          "LIGHTING"
+        ],
+        [
+          "ELECTRIC",
+          "WIRING"
+        ]
+      ]
+    },
+    "water_leak": {
+      "category": "habitability_repairs",
+      "urgency": "urgent",
+      "keywords": [
+        "leak",
+        "leaking",
+        "dripping",
+        "flood",
+        "flooding",
+        "water damage",
+        "damp",
+        "ceiling leak",
+        "leaky",
+        "drip",
+        "water coming through",
+        "puddle"
+      ],
+      "nyc_311": [
+        [
+          "WATER LEAK",
+          "HEAVY FLOW"
+        ],
+        [
+          "WATER LEAK",
+          "SLOW LEAK"
+        ],
+        [
+          "WATER LEAK",
+          "DAMP SPOT"
+        ]
+      ]
+    },
+    "plumbing": {
+      "category": "habitability_repairs",
+      "urgency": "routine",
+      "keywords": [
+        "toilet",
+        "sink",
+        "drain",
+        "clogged",
+        "clog",
+        "shower",
+        "bathtub",
+        "faucet",
+        "pipe",
+        "plumbing",
+        "sewage",
+        "backup",
+        "toilet won't flush",
+        "backed up",
+        "drain is slow"
+      ],
+      "nyc_311": [
+        [
+          "PLUMBING",
+          "BASIN/SINK"
+        ],
+        [
+          "PLUMBING",
+          "BATHTUB/SHOWER"
+        ],
+        [
+          "PLUMBING",
+          "TOILET"
+        ],
+        [
+          "UNSANITARY CONDITION",
+          "SEWAGE"
+        ]
+      ]
+    },
+    "paint_plaster": {
+      "category": "habitability_repairs",
+      "urgency": "routine",
+      "keywords": [
+        "paint",
+        "peeling",
+        "plaster",
+        "crack",
+        "wall",
+        "ceiling",
+        "chipping"
+      ],
+      "nyc_311": [
+        [
+          "PAINT/PLASTER",
+          "WALL"
+        ],
+        [
+          "PAINT/PLASTER",
+          "CEILING"
+        ]
+      ]
+    },
+    "doors_windows": {
+      "category": "habitability_repairs",
+      "urgency": "routine",
+      "keywords": [
+        "door",
+        "lock",
+        "window",
+        "broken window",
+        "draft",
+        "frame",
+        "key",
+        "locked out",
+        "lockout",
+        "front door",
+        "window won't close"
+      ],
+      "nyc_311": [
+        [
+          "DOOR/WINDOW",
+          "DOOR"
+        ],
+        [
+          "DOOR/WINDOW",
+          "WINDOW FRAME"
+        ],
+        [
+          "DOOR/WINDOW",
+          "DOOR FRAME"
+        ],
+        [
+          "DOOR/WINDOW",
+          "WINDOW PANE"
+        ]
+      ]
+    },
+    "appliances": {
+      "category": "habitability_repairs",
+      "urgency": "routine",
+      "keywords": [
+        "stove",
+        "oven",
+        "range",
+        "refrigerator",
+        "fridge",
+        "freezer",
+        "appliance",
+        "dishwasher"
+      ],
+      "nyc_311": [
+        [
+          "APPLIANCE",
+          "ELECTRIC/GAS RANGE"
+        ],
+        [
+          "APPLIANCE",
+          "REFRIGERATOR"
+        ]
+      ]
+    },
+    "flooring_stairs": {
+      "category": "habitability_repairs",
+      "urgency": "routine",
+      "keywords": [
+        "floor",
+        "floorboard",
+        "stairs",
+        "stairway",
+        "railing",
+        "tile"
+      ],
+      "nyc_311": [
+        [
+          "FLOORING/STAIRS",
+          "FLOOR"
+        ],
+        [
+          "FLOORING/STAIRS",
+          "STAIRS"
+        ]
+      ]
+    },
+    "intercom": {
+      "category": "habitability_repairs",
+      "urgency": "routine",
+      "keywords": [
+        "intercom",
+        "buzzer",
+        "doorbell",
+        "bell",
+        "package room"
+      ],
+      "nyc_311": [
+        [
+          "GENERAL",
+          "BELL/BUZZER/INTERCOM"
+        ]
+      ]
+    },
+    "elevator": {
+      "category": "habitability_repairs",
+      "urgency": "urgent",
+      "keywords": [
+        "elevator",
+        "lift",
+        "stuck"
+      ],
+      "nyc_311": [
+        [
+          "ELEVATOR",
+          "MAINTENANCE"
+        ]
+      ]
+    },
+    "pests": {
+      "category": "health_hazards",
+      "urgency": "urgent",
+      "keywords": [
+        "roach",
+        "roaches",
+        "cockroach",
+        "mice",
+        "mouse",
+        "rat",
+        "rats",
+        "rodent",
+        "pest",
+        "pests",
+        "ants",
+        "exterminator",
+        "bugs",
+        "insects",
+        "droppings",
+        "mouse droppings"
+      ],
+      "nyc_311": [
+        [
+          "UNSANITARY CONDITION",
+          "PESTS"
+        ]
+      ]
+    },
+    "bedbugs": {
+      "category": "health_hazards",
+      "urgency": "urgent",
+      "keywords": [
+        "bedbug",
+        "bedbugs",
+        "bed bug",
+        "bed bugs",
+        "bites"
+      ],
+      "nyc_311": []
+    },
+    "mold": {
+      "category": "health_hazards",
+      "urgency": "urgent",
+      "keywords": [
+        "mold",
+        "mould",
+        "mildew",
+        "musty",
+        "damp"
+      ],
+      "nyc_311": [
+        [
+          "UNSANITARY CONDITION",
+          "MOLD"
+        ]
+      ]
+    },
+    "lead": {
+      "category": "health_hazards",
+      "urgency": "urgent",
+      "keywords": [
+        "lead",
+        "lead paint",
+        "peeling paint",
+        "child",
+        "baby",
+        "toddler",
+        "kid"
+      ],
+      "nyc_311": []
+    },
+    "smoke_co_alarms": {
+      "category": "safety_devices",
+      "urgency": "urgent",
+      "keywords": [
+        "smoke detector",
+        "smoke alarm",
+        "carbon monoxide",
+        "co detector",
+        "co alarm",
+        "beeping",
+        "chirping",
+        "alarm"
+      ],
+      "nyc_311": [
+        [
+          "SAFETY",
+          "SMOKE DETECTOR"
+        ],
+        [
+          "SAFETY",
+          "CARBON MONOXIDE DETECTOR"
+        ]
+      ]
+    },
+    "window_guards": {
+      "category": "safety_devices",
+      "urgency": "urgent",
+      "keywords": [
+        "window guard",
+        "window guards",
+        "child safety window"
+      ],
+      "nyc_311": [
+        [
+          "SAFETY",
+          "WINDOW GUARD BROKEN/MISSING"
+        ]
+      ]
+    },
+    "noise": {
+      "category": "quality_of_life",
+      "urgency": "routine",
+      "keywords": [
+        "noise",
+        "noisy",
+        "loud",
+        "music",
+        "party",
+        "banging",
+        "pounding",
+        "neighbor",
+        "neighbors",
+        "barking",
+        "construction noise",
+        "quiet hours",
+        "stomping",
+        "footsteps",
+        "yelling",
+        "dog barking"
+      ],
+      "nyc_311": [
+        [
+          "Noise - Residential",
+          "Loud Music/Party"
+        ],
+        [
+          "Noise - Residential",
+          "Banging/Pounding"
+        ],
+        [
+          "Noise - Street/Sidewalk",
+          "Loud Music/Party"
+        ]
+      ]
+    },
+    "garbage": {
+      "category": "quality_of_life",
+      "urgency": "routine",
+      "keywords": [
+        "trash",
+        "garbage",
+        "recycling",
+        "compost",
+        "bins",
+        "dumpster",
+        "pickup",
+        "bulk"
+      ],
+      "nyc_311": [
+        [
+          "UNSANITARY CONDITION",
+          "GARBAGE/RECYCLING STORAGE"
+        ],
+        [
+          "Dirty Condition",
+          "Trash"
+        ],
+        [
+          "Missed Collection",
+          "Trash"
+        ]
+      ]
+    },
+    "snow_ice": {
+      "category": "quality_of_life",
+      "urgency": "routine",
+      "keywords": [
+        "snow",
+        "ice",
+        "icy",
+        "shovel",
+        "salt"
+      ],
+      "nyc_311": [
+        [
+          "Snow or Ice",
+          "Sidewalk"
+        ]
+      ]
+    },
+    "entry_access": {
+      "category": "tenancy_rights",
+      "urgency": "routine",
+      "keywords": [
+        "enter",
+        "entry",
+        "access",
+        "notice",
+        "inspection",
+        "come in",
+        "let in",
+        "permission",
+        "showing"
+      ],
+      "nyc_311": []
+    },
+    "retaliation": {
+      "category": "tenancy_rights",
+      "urgency": "routine",
+      "keywords": [
+        "retaliate",
+        "retaliation",
+        "evict",
+        "eviction",
+        "complained",
+        "rent increase",
+        "non-renewal",
+        "harass",
+        "harassment"
+      ],
+      "nyc_311": []
+    },
+    "repairs_timeline": {
+      "category": "tenancy_rights",
+      "urgency": "routine",
+      "keywords": [
+        "how long",
+        "when will",
+        "still not fixed",
+        "repair",
+        "fix",
+        "deadline",
+        "violation",
+        "escalate",
+        "rent reduction",
+        "withhold",
+        "deduct"
+      ],
+      "nyc_311": []
+    },
+    "street_parking": {
+      "category": "city_services",
+      "urgency": "city",
+      "keywords": [
+        "parking",
+        "parked",
+        "hydrant",
+        "driveway",
+        "blocked driveway",
+        "double parked",
+        "abandoned car",
+        "pothole"
+      ],
+      "nyc_311": [
+        [
+          "Illegal Parking",
+          "Blocked Hydrant"
+        ],
+        [
+          "Blocked Driveway",
+          "No Access"
+        ],
+        [
+          "Street Condition",
+          "Pothole"
+        ]
+      ]
+    }
+  }
+}

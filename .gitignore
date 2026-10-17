@@ -3,6 +3,10 @@ data/raw/
 data/processed/
 *.parquet
 *.csv
+# small synthetic source of truth is committed
+!data/synthetic/*.csv
+# built SQLite RAG databases (rebuild with: python -m rag.build)
+data/rag/
 *.duckdb
 *.duckdb.wal
 

@@ -1,0 +1,30 @@
+record_id,property_id,requirement,law_id,last_completed,next_due,status,notes
+CR-0001,P-NYC-001,Local Law 1 annual notice (child under 6 inquiry),nyc-lead-ll1,2025-12-29,2026-12-29,ok,Notices go out Jan 1-16; follow up by Feb 15 if no response
+CR-0002,P-NYC-001,Local Law 1 annual visual lead inspection (units with child under 6),nyc-lead-ll1,2026-01-26,2027-01-26,ok,
+CR-0003,P-NYC-001,Local Law 55 annual inspection for pests and mold,nyc-allergens-ll55,2026-03-24,2027-03-24,ok,
+CR-0004,P-NYC-001,Bedbug annual report to HPD (file Dec 1-31),nyc-bedbug-ll69,2025-12-12,2026-12-12,ok,
+CR-0005,P-NYC-001,Window guard annual notice,nyc-window-guards,2026-01-14,2027-01-14,ok,
+CR-0006,P-NYC-001,Boiler inspection (DOB),nyc-heat,2026-08-01,2027-08-01,ok,
+CR-0007,P-NYC-001,Smoke and CO alarm notice/check at turnover,nyc-smoke-co-alarms,2026-05-15,2027-05-15,ok,
+CR-0008,P-NYC-002,Local Law 55 annual inspection for pests and mold,nyc-allergens-ll55,2026-03-21,2027-03-21,ok,
+CR-0009,P-NYC-002,Bedbug annual report to HPD (file Dec 1-31),nyc-bedbug-ll69,2025-12-12,2026-12-12,ok,
+CR-0010,P-NYC-002,Window guard annual notice,nyc-window-guards,2025-12-16,2026-12-16,ok,
+CR-0011,P-NYC-002,Boiler inspection (DOB),nyc-heat,2026-08-29,2027-08-29,ok,
+CR-0012,P-NYC-002,Smoke and CO alarm notice/check at turnover,nyc-smoke-co-alarms,2026-05-27,2027-05-27,ok,
+CR-0013,P-NYC-002,Elevator periodic inspection,,2026-04-09,2027-04-09,ok,
+CR-0014,P-NYC-003,Local Law 55 annual inspection for pests and mold,nyc-allergens-ll55,2026-04-01,2027-04-01,ok,
+CR-0015,P-NYC-003,Bedbug annual report to HPD (file Dec 1-31),nyc-bedbug-ll69,2025-12-12,2026-12-12,ok,
+CR-0016,P-NYC-003,Window guard annual notice,nyc-window-guards,2026-01-06,2027-01-06,ok,
+CR-0017,P-NYC-003,Boiler inspection (DOB),nyc-heat,2026-08-22,2027-08-22,ok,
+CR-0018,P-NYC-003,Smoke and CO alarm notice/check at turnover,nyc-smoke-co-alarms,2026-04-27,2027-04-27,ok,
+CR-0019,P-NYC-003,Elevator periodic inspection,,2026-04-15,2027-04-15,ok,
+CR-0020,P-SF-001,Bed bug information notice to new tenants (Civ. Code 1954.603),ca-bedbug-notice,2026-01-01,2027-01-01,ok,Give at every new tenancy; tracked annually for audit
+CR-0021,P-SF-001,Smoke and CO alarm check,ca-smoke-co-alarms,2026-02-28,2027-02-28,ok,
+CR-0022,P-SF-001,Lead-based paint disclosure + EPA pamphlet at lease signing,us-lead-disclosure,2025-12-06,2026-12-06,ok,
+CR-0023,P-SF-001,Heating system service (70F capability check),sf-heat,2025-09-22,2026-09-22,overdue,
+CR-0024,P-SF-002,Bed bug information notice to new tenants (Civ. Code 1954.603),ca-bedbug-notice,2026-01-04,2027-01-04,ok,Give at every new tenancy; tracked annually for audit
+CR-0025,P-SF-002,Smoke and CO alarm check,ca-smoke-co-alarms,2026-01-22,2027-01-22,ok,
+CR-0026,P-SF-002,Elevator annual inspection,,2026-03-09,2027-03-09,ok,
+CR-0027,P-SF-003,Bed bug information notice to new tenants (Civ. Code 1954.603),ca-bedbug-notice,2026-01-29,2027-01-29,ok,Give at every new tenancy; tracked annually for audit
+CR-0028,P-SF-003,Smoke and CO alarm check,ca-smoke-co-alarms,2026-03-01,2027-03-01,ok,
+CR-0029,P-SF-003,Lead-based paint disclosure + EPA pamphlet at lease signing,us-lead-disclosure,2025-12-21,2026-12-21,ok,

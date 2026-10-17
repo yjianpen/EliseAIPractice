@@ -1,0 +1,152 @@
+{
+  "jurisdiction": {
+    "level": "state",
+    "city": null,
+    "state": "CA"
+  },
+  "disclaimer": "Plain-language summaries for an AI assistant to cite. Not legal advice; always link the source.",
+  "laws": [
+    {
+      "id": "ca-habitability",
+      "citation": "Cal. Civ. Code § 1941.1",
+      "title": "Untenantable dwellings (habitability standards)",
+      "topics": [
+        "repairs_timeline",
+        "heat",
+        "hot_water",
+        "water_supply",
+        "plumbing",
+        "gas",
+        "electrical",
+        "pests",
+        "garbage",
+        "flooring_stairs",
+        "doors_windows",
+        "appliances",
+        "water_leak",
+        "mold"
+      ],
+      "summary": "A rental is untenantable if it substantially lacks: weatherproofing with unbroken windows and doors; working plumbing and gas; hot and cold running water and sewage; working heating; safe electrical lighting and wiring; clean common areas free of garbage, rodents and vermin; adequate trash receptacles; and floors, stairs and railings in good repair. For leases entered or renewed on or after January 1, 2026, a working stove and refrigerator are also required (with exceptions such as SROs and units with shared kitchens; tenants may agree to supply their own refrigerator). Recalled stoves or refrigerators must be repaired or replaced within 30 days of notice of the recall.",
+      "key_points": [
+        "Hot and cold running water",
+        "Working heat",
+        "Free of rodents and vermin",
+        "Stove and refrigerator for leases from 2026-01-01",
+        "Recalled appliances: 30 days"
+      ],
+      "source_url": "https://california.public.law/codes/ca_civ_code_section_1941.1",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "ca-repair-deduct",
+      "citation": "Cal. Civ. Code § 1942",
+      "title": "Repair and deduct",
+      "topics": [
+        "repairs_timeline"
+      ],
+      "summary": "If the landlord does not repair conditions that make a unit untenantable within a reasonable time after the tenant's oral or written notice, the tenant may make the repair and deduct the cost from rent, up to one month's rent and no more than twice in 12 months, or move out and be released from further rent. Thirty days after notice is presumed reasonable, but a shorter time can be reasonable in urgent situations. Not available when the tenant caused the problem.",
+      "key_points": [
+        "Notice to landlord first",
+        "30 days presumed reasonable",
+        "Cap: one month's rent",
+        "Max twice per 12 months"
+      ],
+      "source_url": "https://california.public.law/codes/ca_civ_code_section_1942",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "ca-retaliation",
+      "citation": "Cal. Civ. Code § 1942.5",
+      "title": "Protection against retaliation",
+      "topics": [
+        "retaliation",
+        "repairs_timeline",
+        "bedbugs"
+      ],
+      "summary": "A landlord may not evict, raise rent, reduce services or threaten a tenant (who is current on rent) within 180 days after the tenant complains about habitability to the landlord or a government agency, reports a suspected bed bug infestation, uses repair-and-deduct, or wins a habitability case. Retaliation for joining a tenant association or lawfully asserting rights is also prohibited. Tenants can recover actual damages and, for malicious conduct, $100-$2,000 per act; the prevailing party gets attorney's fees.",
+      "key_points": [
+        "180-day protection after protected acts",
+        "Includes reporting bed bugs",
+        "Usable once per 12 months for the presumption",
+        "Punitive $100-$2,000 per act"
+      ],
+      "source_url": "https://california.public.law/codes/ca_civ_code_section_1942.5",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "ca-entry",
+      "citation": "Cal. Civ. Code § 1954",
+      "title": "Landlord entry",
+      "topics": [
+        "entry_access"
+      ],
+      "summary": "A landlord may enter for emergencies, necessary or agreed repairs and services, showings, inspections, court orders, or when the tenant has abandoned the unit. Except in emergencies, when the tenant consents at the time, or after abandonment, the landlord must give reasonable written notice stating the date, approximate time and purpose; 24 hours is presumed reasonable (6 days if mailed). Entry is limited to normal business hours unless the tenant consents. If tenant and landlord orally agree to a repair visit within one week, no written notice is needed. Landlords may not use entry to harass.",
+      "key_points": [
+        "24 hours written notice (6 days if mailed)",
+        "Business hours",
+        "Emergency exception",
+        "Oral agreement for repairs within one week"
+      ],
+      "source_url": "https://california.public.law/codes/ca_civ_code_section_1954",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "ca-substandard",
+      "citation": "Cal. Health & Safety Code § 17920.3",
+      "title": "Substandard buildings",
+      "topics": [
+        "mold",
+        "pests",
+        "heat",
+        "hot_water",
+        "water_leak",
+        "plumbing"
+      ],
+      "summary": "A building is substandard when listed conditions endanger occupants' health or safety. Inadequate sanitation includes lack of hot and cold running water, lack of adequate heating, dampness of habitable rooms, infestation of insects, vermin or rodents, and visible mold growth (not counting mold minor enough to be removed by routine cleaning). Substandard units are untenantable under Civil Code 1941.1.",
+      "key_points": [
+        "Visible mold: (a)(13)",
+        "Dampness: (a)(11)",
+        "Vermin/insect/rodent infestation: (a)(12)",
+        "Inadequate heat: (a)(6)",
+        "No hot/cold water: (a)(5)"
+      ],
+      "source_url": "https://california.public.law/codes/ca_health_and_safety_code_section_17920.3",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "ca-bedbug-notice",
+      "citation": "Cal. Civ. Code § 1954.603",
+      "title": "Bed bug information notice",
+      "topics": [
+        "bedbugs",
+        "pests"
+      ],
+      "summary": "Before a new tenancy starts, landlords must give a written notice (at least 10-point type) with general information about bed bugs, the importance of prompt written reporting, and the procedure for reporting suspected infestations to the landlord. Existing tenants had to receive it by January 1, 2018.",
+      "key_points": [
+        "Notice before every new tenancy",
+        "Explains how to report suspected bed bugs",
+        "Reporting bed bugs is protected from retaliation (1942.5)"
+      ],
+      "source_url": "https://california.public.law/codes/ca_civ_code_section_1954.603",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "ca-smoke-co-alarms",
+      "citation": "Cal. Health & Safety Code §§ 13113.7, 17926",
+      "title": "Smoke alarms and carbon monoxide devices",
+      "topics": [
+        "smoke_co_alarms",
+        "gas"
+      ],
+      "summary": "Owners must install operable smoke alarms in dwelling units, and carbon monoxide devices in units with a fossil-fuel heater or appliance, fireplace or attached garage. Tenants must tell the owner when an alarm or device is inoperable or deficient.",
+      "key_points": [
+        "Owner installs smoke and CO alarms",
+        "CO required with fossil-fuel appliances or attached garage",
+        "Tenant reports inoperable devices"
+      ],
+      "source_url": "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=HSC&sectionNum=17926",
+      "verified_on": null,
+      "verification_note": "Summarized from general knowledge; statute text not re-checked in this pass."
+    }
+  ]
+}

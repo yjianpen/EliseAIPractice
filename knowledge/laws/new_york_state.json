@@ -1,0 +1,26 @@
+{
+  "jurisdiction": {"level": "state", "city": null, "state": "NY"},
+  "disclaimer": "Plain-language summaries for an AI assistant to cite. Not legal advice; always link the source.",
+  "laws": [
+    {
+      "id": "ny-habitability",
+      "citation": "N.Y. Real Property Law § 235-b",
+      "title": "Warranty of habitability",
+      "topics": ["repairs_timeline", "heat", "hot_water", "pests", "mold", "water_leak", "plumbing", "water_supply", "gas", "electrical"],
+      "summary": "Every residential lease, written or oral, includes a landlord guarantee that the apartment and shared areas are fit to live in and free of conditions dangerous to tenants' life, health or safety. Tenants cannot waive this right. Conditions caused by the tenant or people under the tenant's control are not a breach. Courts can award damages, typically as a rent abatement, without expert testimony.",
+      "key_points": ["Applies to all residential leases", "Cannot be waived", "Tenant-caused conditions excluded", "Remedy: damages / rent abatement"],
+      "source_url": "https://www.nysenate.gov/legislation/laws/RPP/235-B",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "ny-retaliation",
+      "citation": "N.Y. Real Property Law § 223-b",
+      "title": "Protection against retaliation",
+      "topics": ["retaliation", "repairs_timeline"],
+      "summary": "A landlord may not retaliate against a tenant for good-faith complaints to the landlord or a government agency about health, safety or habitability, for enforcing lease or repair rights, or for joining a tenant organization. Retaliation includes starting an eviction, refusing to renew, or offering a renewal with an unreasonable rent increase. If the landlord does one of these within one year after a protected act, retaliation is presumed and the landlord must show a non-retaliatory reason. Exceptions include owner-occupied buildings with fewer than four units.",
+      "key_points": ["Protected: complaints, enforcing rights, tenant organizing", "One-year presumption", "Owner-occupied < 4 units excluded", "Remedies: damages, fees, eviction defense"],
+      "source_url": "https://www.nysenate.gov/legislation/laws/RPP/223-B",
+      "verified_on": "2026-10-16"
+    }
+  ]
+}

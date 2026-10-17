@@ -1,0 +1,19 @@
+# Data: large, re-downloadable with scripts/download_311.sh
+data/raw/
+data/processed/
+*.parquet
+*.csv
+*.duckdb
+*.duckdb.wal
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Local / OS
+.DS_Store
+.env
+_to_delete/
+tools/

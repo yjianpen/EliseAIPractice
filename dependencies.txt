@@ -1,0 +1,7 @@
+# Python dependencies for the EliseAIPractice project.
+# Requires Python 3.12 or 3.13 (3.15 has no prebuilt DuckDB wheel yet).
+# Install everything with:  bash setup.sh
+#   or manually:            pip install -r dependencies.txt
+
+duckdb>=1.5.6      # SQL engine for the 311 CSV/Parquet data
+pandas>=2.2        # DataFrames; DuckDB query results -> .df()

@@ -1,0 +1,20 @@
+property_id,unit_type,bedrooms,bathrooms,sqft_min,sqft_max,rent_min,rent_max,provenance,source_url,observed_on
+P-NYC-001,Studio,0,1,420,520,3600,4100,synthetic,,2026-10-17
+P-NYC-001,1 Bedroom,1,1,600,720,4300,5200,synthetic,,2026-10-17
+P-NYC-001,2 Bedroom,2,1,760,900,5400,6800,synthetic,,2026-10-17
+P-NYC-001,3 Bedroom,3,2,1000,1200,6900,8200,synthetic,,2026-10-17
+P-NYC-002,Studio,0,1,450,520,3900,4300,synthetic,,2026-10-17
+P-NYC-002,1 Bedroom,1,1,602,735,4935,5549,listing,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-002,2 Bedroom,2,2,950,1100,6800,7900,synthetic,,2026-10-17
+P-NYC-002,3 Bedroom,3,2,1250,1400,8900,10500,synthetic,,2026-10-17
+P-NYC-003,Studio,0,1,430,520,3413,3747,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003,1 Bedroom,1,1,600,720,4122,4472,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003,2 Bedroom,2,2,950,1150,5600,6900,synthetic,,2026-10-17
+P-SF-001,Studio,0,1,400,500,1864,2300,listing,https://www.essexapartmenthomes.com/apartments/san-francisco/fox-plaza https://s203.q4cdn.com/488215793/files/doc_news/2013/02/1/Essex-Acquires-San-Francisco-Apartment-Community.pdf,2026-10-17
+P-SF-001,1 Bedroom,1,1,550,700,2350,2700,synthetic,,2026-10-17
+P-SF-001,2 Bedroom,2,1,800,950,2750,3014,listing,https://www.essexapartmenthomes.com/apartments/san-francisco/fox-plaza https://s203.q4cdn.com/488215793/files/doc_news/2013/02/1/Essex-Acquires-San-Francisco-Apartment-Community.pdf,2026-10-17
+P-SF-002,1 Bedroom,1,1,650,760,2900,3300,synthetic,,2026-10-17
+P-SF-002,2 Bedroom,2,1,850,1000,3700,4200,synthetic,,2026-10-17
+P-SF-003,Studio,0,1,450,520,2700,2950,synthetic,,2026-10-17
+P-SF-003,1 Bedroom,1,1,650,733,3250,3450,listing,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17
+P-SF-003,2 Bedroom,2,2,855,986,3880,4293,listing,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17

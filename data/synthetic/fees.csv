@@ -1,0 +1,49 @@
+fee_id,property_id,fee_code,fee_name,category,amount,basis,frequency,required,refundable,provenance,notes,effective_from,effective_to,source_url,observed_on
+P-NYC-001:application,P-NYC-001,application,Application and credit check fee,application,20,flat,one_time,True,False,synthetic,,2026-01-01,,,2026-10-17
+P-NYC-001:security_deposit,P-NYC-001,security_deposit,Security deposit,deposit,1,months_of_rent,one_time,True,True,synthetic,,2026-01-01,,,2026-10-17
+P-NYC-001:stuyfitness,P-NYC-001,stuyfitness,StuyFitness membership,amenity,75,flat,monthly,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-NYC-001:parking,P-NYC-001,parking,Garage parking (LAZ Parking),parking,525,flat,monthly,False,False,synthetic,Valet or park & lock; monthly contracts through the garage operator,2026-01-01,,,2026-10-17
+P-NYC-001:storage,P-NYC-001,storage,In-building storage unit (Storage Deluxe),service,85,flat,monthly,False,False,synthetic,Starting price; varies by size,2026-01-01,,,2026-10-17
+P-NYC-001:late_fee,P-NYC-001,late_fee,Late rent fee,penalty,50,flat,per_occurrence,True,False,synthetic,Charged when rent is not received by the 5th,2026-01-01,,,2026-10-17
+P-NYC-001:key_fob,P-NYC-001,key_fob,Replacement key fob,service,25,flat,per_occurrence,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-NYC-002:application,P-NYC-002,application,Application fee,application,20,flat,one_time,True,False,listing,,2026-01-01,,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-002:holding_deposit,P-NYC-002,holding_deposit,Holding deposit,deposit,500,flat,one_time,True,False,listing,Non-refundable per listing,2026-01-01,,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-002:security_deposit,P-NYC-002,security_deposit,Security deposit,deposit,1,months_of_rent,one_time,True,True,synthetic,,2026-01-01,,,2026-10-17
+P-NYC-002:security_deposit_special,P-NYC-002,security_deposit_special,Security deposit special (select apartments),deposit,1000,flat,one_time,False,True,listing,Promotional; replaced the standard deposit on select units,2025-07-01,2025-09-30,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-002:amenity_fee,P-NYC-002,amenity_fee,Amenity use fee,amenity,50,flat,monthly,True,False,listing,,2026-01-01,,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-002:pet_fee,P-NYC-002,pet_fee,Pet fee,pet,100,per_pet,one_time,False,False,listing,Per cat or dog; listing calls it optional,2026-01-01,,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-002:parking,P-NYC-002,parking,Garage parking,parking,650,flat,monthly,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-NYC-002:late_fee,P-NYC-002,late_fee,Late rent fee,penalty,50,flat,per_occurrence,True,False,synthetic,,2026-01-01,,,2026-10-17
+P-NYC-003:application,P-NYC-003,application,Application fee,application,17,flat,one_time,True,False,listing,,2026-01-01,,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:holding_deposit,P-NYC-003,holding_deposit,Holding deposit,deposit,500,flat,one_time,True,True,listing,,2026-01-01,,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:security_deposit,P-NYC-003,security_deposit,Security deposit,deposit,1,months_of_rent,one_time,True,True,synthetic,,2026-01-01,,,2026-10-17
+P-NYC-003:utility_setup,P-NYC-003,utility_setup,Utility account setup fee,utility,10,flat,one_time,True,False,listing,,2026-01-01,,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:utility_billing,P-NYC-003,utility_billing,Utility billing service fee,utility,5,flat,monthly,True,False,listing,,2026-01-01,,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:amenity_fee,P-NYC-003,amenity_fee,Amenity use fee (fitness center),amenity,100,flat,monthly,True,False,listing,,2026-01-01,,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:pet_fee,P-NYC-003,pet_fee,Pet fee,pet,100,per_pet,one_time,False,False,listing,,2026-01-01,,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:water_sewer,P-NYC-003,water_sewer,Water and sewer (submetered),utility,45,flat,monthly,True,False,synthetic,Average; billed on actual usage,2026-01-01,,,2026-10-17
+P-NYC-003:parking,P-NYC-003,parking,Valet parking,parking,595,flat,monthly,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-NYC-003:late_fee,P-NYC-003,late_fee,Late rent fee,penalty,50,flat,per_occurrence,True,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-001:application,P-SF-001,application,Application screening fee,application,50,flat,one_time,True,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-001:security_deposit,P-SF-001,security_deposit,Security deposit,deposit,1,months_of_rent,one_time,True,True,synthetic,,2026-01-01,,,2026-10-17
+P-SF-001:pet_rent,P-SF-001,pet_rent,Pet rent,pet,50,per_pet,monthly,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-001:trash_fee,P-SF-001,trash_fee,Trash and recycling fee,utility,25,flat,monthly,True,False,synthetic,Recology service billed back as a flat monthly charge,2026-01-01,,,2026-10-17
+P-SF-001:water_sewer,P-SF-001,water_sewer,Water and sewer,utility,40,flat,monthly,True,False,synthetic,Allocated by apartment size and occupancy,2026-01-01,,,2026-10-17
+P-SF-001:parking,P-SF-001,parking,Underground garage parking,parking,300,flat,monthly,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-001:late_fee,P-SF-001,late_fee,Late rent fee,penalty,75,flat,per_occurrence,True,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-002:application,P-SF-002,application,Application screening fee,application,50,flat,one_time,True,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-002:security_deposit,P-SF-002,security_deposit,Security deposit,deposit,1,months_of_rent,one_time,True,True,synthetic,,2026-01-01,,,2026-10-17
+P-SF-002:pet_rent,P-SF-002,pet_rent,Pet rent,pet,50,per_pet,monthly,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-002:trash_fee,P-SF-002,trash_fee,Trash and recycling fee,utility,30,flat,monthly,True,False,synthetic,Recology service billed back as a flat monthly charge,2026-01-01,,,2026-10-17
+P-SF-002:water_sewer,P-SF-002,water_sewer,Water and sewer,utility,55,flat,monthly,True,False,synthetic,Allocated by apartment size and occupancy,2026-01-01,,,2026-10-17
+P-SF-002:parking,P-SF-002,parking,Assigned parking space,parking,200,flat,monthly,False,False,synthetic,Limited spaces; waitlist,2026-01-01,,,2026-10-17
+P-SF-002:late_fee,P-SF-002,late_fee,Late rent fee,penalty,75,flat,per_occurrence,True,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-003:application,P-SF-003,application,Application screening fee,application,55,flat,one_time,True,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-003:security_deposit,P-SF-003,security_deposit,Security deposit,deposit,1000,flat,one_time,True,True,listing,Listing amount; may vary by credit result,2026-01-01,,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17
+P-SF-003:pet_fee,P-SF-003,pet_fee,Pet fee,pet,300,per_pet,one_time,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-003:pet_rent,P-SF-003,pet_rent,Pet rent,pet,75,per_pet,monthly,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-003:trash_fee,P-SF-003,trash_fee,Trash and recycling fee,utility,35,flat,monthly,True,False,synthetic,Recology service billed back as a flat monthly charge,2026-01-01,,,2026-10-17
+P-SF-003:water_sewer,P-SF-003,water_sewer,Water and sewer,utility,60,flat,monthly,True,False,synthetic,Allocated by apartment size and occupancy,2026-01-01,,,2026-10-17
+P-SF-003:parking,P-SF-003,parking,Underground parking,parking,350,flat,monthly,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-003:ev_charging,P-SF-003,ev_charging,EV charging add-on,parking,50,flat,monthly,False,False,synthetic,,2026-01-01,,,2026-10-17
+P-SF-003:late_fee,P-SF-003,late_fee,Late rent fee,penalty,50,flat,per_occurrence,True,False,synthetic,,2026-01-01,,,2026-10-17

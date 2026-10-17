@@ -121,3 +121,35 @@ maintenance line.
 Beam Living will never penalize you for requesting repairs, reporting conditions to the city, or joining a tenant
 association. If you believe a staff member has treated you unfairly after a complaint, contact the regional manager
 at the office email.
+
+## Paying rent and late rent
+<!-- topics: rent_and_fees, leasing | cities: all -->
+Rent is due on the 1st and can be paid online through the resident portal, by automatic monthly payment, or by check at resident services. A late fee applies when rent is not received by the 5th; the amount is in the StuyTown fee schedule. Residents having trouble paying can ask resident services about payment arrangements.
+
+## Fees and the fee schedule
+<!-- topics: rent_and_fees | cities: all -->
+StuyTown keeps a single fee schedule. Required charges are limited to the application and security deposit; fitness membership, garage parking and storage are optional add-ons billed monthly to residents who sign up.
+
+## Pets
+<!-- topics: pets | cities: all -->
+Cats and dogs are welcome. Register every pet with resident services before it moves in; registration is free. Dogs must be leashed outside apartments and on the lawns, and owners clean up after pets. The dog run is open daily.
+
+## Parking and storage
+<!-- topics: parking, amenities | cities: all -->
+Garages around the property are operated by a parking company; monthly contracts are signed directly with the garage. In-building storage units are rented through the storage partner. Both are optional.
+
+## Amenity use and reservations
+<!-- topics: amenities | cities: all -->
+Most outdoor spaces are open to all residents. The River Room and party spaces are booked through Oval Services. StuyFitness requires a membership.
+
+## Utilities and monthly statement
+<!-- topics: utilities, garbage | cities: all -->
+Heat, hot water, cooking gas, water and trash are included in rent. Residents open their own electricity and internet accounts.
+
+## Lease renewals
+<!-- topics: leasing | cities: all -->
+Renewal offers go out about 90 days before the lease ends. Rent stabilized residents receive renewal leases on the state form with the legally required options.
+
+## Moving out and deposit return
+<!-- topics: moving, rent_and_fees | cities: all -->
+Give written notice through the resident portal and book a move-out time with resident services. After the apartment is inspected and keys are returned, any deposit deductions are itemized and the balance is refunded within the legal deadline.

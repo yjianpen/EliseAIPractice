@@ -31,11 +31,11 @@ Quiet hours at The Brooklyner are 11:00 PM - 7:00 AM. Report repeated noise from
 Trash: daily chute; bulk items via concierge. Recycling: daily chute. Bag all food waste; loose garbage in common areas attracts pests.
 
 ## Laundry
-<!-- topics: appliances -->
+<!-- topics: appliances, amenities -->
 In-unit washer/dryer.
 
 ## Pets and smoking
-<!-- topics: noise -->
+<!-- topics: pets -->
 Pets: dogs and cats allowed. Smoking: smoke-free building.
 
 ## Elevator

@@ -1,0 +1,39 @@
+property_id,utility,responsibility,provider,provenance,source_url,observed_on
+P-NYC-001,heat,included,,synthetic,,2026-10-17
+P-NYC-001,hot_water,included,,synthetic,,2026-10-17
+P-NYC-001,cooking_gas,included,,synthetic,,2026-10-17
+P-NYC-001,electricity,tenant_direct,Con Edison,synthetic,,2026-10-17
+P-NYC-001,water_sewer,included,,synthetic,,2026-10-17
+P-NYC-001,trash,included,,synthetic,,2026-10-17
+P-NYC-001,internet,tenant_direct,Spectrum or Verizon Fios,synthetic,,2026-10-17
+P-NYC-002,heat,included,,synthetic,,2026-10-17
+P-NYC-002,hot_water,included,,synthetic,,2026-10-17
+P-NYC-002,cooking_gas,included,,synthetic,,2026-10-17
+P-NYC-002,electricity,tenant_direct,Con Edison,synthetic,,2026-10-17
+P-NYC-002,water_sewer,included,,synthetic,,2026-10-17
+P-NYC-002,trash,included,,synthetic,,2026-10-17
+P-NYC-002,internet,tenant_direct,Spectrum or Verizon Fios,synthetic,,2026-10-17
+P-NYC-003,heat,tenant_direct,Con Edison (in-unit heat pump),synthetic,,2026-10-17
+P-NYC-003,hot_water,included,,synthetic,,2026-10-17
+P-NYC-003,electricity,tenant_direct,Con Edison,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003,water_sewer,billed_back,submetered,synthetic,,2026-10-17
+P-NYC-003,trash,included,,synthetic,,2026-10-17
+P-NYC-003,internet,tenant_direct,Verizon Fios or Optimum,synthetic,,2026-10-17
+P-SF-001,heat,included,,synthetic,,2026-10-17
+P-SF-001,hot_water,included,,synthetic,,2026-10-17
+P-SF-001,electricity,tenant_direct,PG&E,synthetic,,2026-10-17
+P-SF-001,water_sewer,billed_back,allocated,synthetic,,2026-10-17
+P-SF-001,trash,billed_back,Recology,synthetic,,2026-10-17
+P-SF-001,internet,tenant_direct,Comcast Xfinity or Sonic,synthetic,,2026-10-17
+P-SF-002,heat,tenant_direct,PG&E (electric wall heaters),synthetic,,2026-10-17
+P-SF-002,hot_water,included,,synthetic,,2026-10-17
+P-SF-002,electricity,tenant_direct,PG&E,synthetic,,2026-10-17
+P-SF-002,water_sewer,billed_back,allocated,synthetic,,2026-10-17
+P-SF-002,trash,billed_back,Recology,synthetic,,2026-10-17
+P-SF-002,internet,tenant_direct,Comcast Xfinity or Sonic,synthetic,,2026-10-17
+P-SF-003,heat,tenant_direct,PG&E (in-unit electric heat),synthetic,,2026-10-17
+P-SF-003,hot_water,included,,synthetic,,2026-10-17
+P-SF-003,electricity,tenant_direct,PG&E,synthetic,,2026-10-17
+P-SF-003,water_sewer,billed_back,allocated,synthetic,,2026-10-17
+P-SF-003,trash,billed_back,Recology,synthetic,,2026-10-17
+P-SF-003,internet,tenant_direct,Comcast Xfinity or Sonic,synthetic,,2026-10-17

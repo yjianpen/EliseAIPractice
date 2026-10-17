@@ -83,3 +83,35 @@ priority requests. Do not remove batteries.
 <!-- topics: retaliation | cities: all -->
 Essex does not retaliate against residents for repair requests, complaints to the city, or tenant organizing.
 Concerns go to the regional director at the help email.
+
+## Paying rent and late rent
+<!-- topics: rent_and_fees, leasing | cities: all -->
+Rent is due on the 1st. Pay in the resident app by ACH (no fee) or debit/credit card (convenience fee). A late fee applies after the grace period stated in your lease; the amount is in your community's fee schedule.
+
+## Fees and the fee schedule
+<!-- topics: rent_and_fees | cities: all -->
+Every Essex community has a published fee schedule. Monthly charges for trash and water/sewer are billed with rent where the community bills them back. Optional services such as parking are listed separately. Pet charges apply only to residents with pets.
+
+## Pets
+<!-- topics: pets | cities: all -->
+Essex communities are generally pet-friendly. Each community sets its pet limits, weight limits and breed restrictions, listed in the community profile. Pets are registered at lease signing or before they move in.
+
+## Parking
+<!-- topics: parking | cities: all -->
+Parking is assigned or unassigned depending on the community and is rented month to month where available. Unregistered vehicles in resident parking may be towed after notice.
+
+## Amenity use and reservations
+<!-- topics: amenities | cities: all -->
+Common areas are for residents and accompanied guests. Book reservable spaces through the resident app.
+
+## Utilities and monthly statement
+<!-- topics: utilities, garbage | cities: all -->
+In San Francisco, trash and water/sewer are typically billed back on your monthly statement as itemized charges; electricity and internet are set up directly with the providers.
+
+## Lease renewals
+<!-- topics: leasing | cities: all -->
+Renewal offers are sent about 60 days before your lease ends. Notice to vacate is given in writing through the resident app by the deadline in your lease.
+
+## Moving out and deposit return
+<!-- topics: moving, rent_and_fees | cities: all -->
+Request a pre-move-out walkthrough. After move-out we send an itemized deposit statement with photos of any damage and refund the remaining balance within the legal deadline.

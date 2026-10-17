@@ -31,11 +31,11 @@ Quiet hours at StuyTown (Stuyvesant Town-Peter Cooper Village) are 10:00 PM - 8:
 Trash: daily (compactor rooms on each floor). Recycling: daily. Bag all food waste; loose garbage in common areas attracts pests.
 
 ## Laundry
-<!-- topics: appliances -->
+<!-- topics: appliances, amenities -->
 Laundry rooms in building basements.
 
 ## Pets and smoking
-<!-- topics: noise -->
+<!-- topics: pets -->
 Pets: dogs and cats allowed with registration. Smoking: smoke-free buildings.
 
 ## Elevator

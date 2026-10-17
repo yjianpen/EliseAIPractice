@@ -1,0 +1,7 @@
+property_id,cats_allowed,dogs_allowed,max_pets,max_weight_lb,breed_restrictions,registration_required,provenance,notes,source_url,observed_on
+P-NYC-001,True,True,2,,,True,synthetic,Pets must be registered with resident services before move-in; a dog run is on site.,,2026-10-17
+P-NYC-002,True,True,6,,,True,listing,Up to 3 dogs and up to 3 cats per listing.,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-003,True,True,2,,,True,listing,Cats and dogs allowed.,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-SF-001,True,True,2,50,,True,synthetic,Pet-friendly residences (listing).,,2026-10-17
+P-SF-002,True,True,2,60,aggressive breeds per Essex standard list,True,synthetic,Pet-friendly with an on-site dog run (listing).,,2026-10-17
+P-SF-003,True,True,4,,breed and pet restrictions apply,True,listing,Up to 2 dogs and up to 2 cats; big dogs welcome; dog run and pet wash station.,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17

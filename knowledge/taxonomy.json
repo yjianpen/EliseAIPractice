@@ -7,7 +7,9 @@
     "safety_devices": "Smoke/CO alarms, window guards, fire escapes",
     "quality_of_life": "Noise, garbage, neighbors, snow",
     "tenancy_rights": "Entry, retaliation, habitability claims",
-    "city_services": "Street-level issues the landlord does not control"
+    "city_services": "Street-level issues the landlord does not control",
+    "leasing_costs": "Rent, fees, pets, parking, utilities and lease terms",
+    "building_life": "Amenities, packages and moving"
   },
   "topics": {
     "heat": {
@@ -326,8 +328,7 @@
         "intercom",
         "buzzer",
         "doorbell",
-        "bell",
-        "package room"
+        "bell"
       ],
       "nyc_311": [
         [
@@ -596,10 +597,9 @@
       "category": "city_services",
       "urgency": "city",
       "keywords": [
-        "parking",
         "parked",
+        "illegal parking",
         "hydrant",
-        "driveway",
         "blocked driveway",
         "double parked",
         "abandoned car",
@@ -619,6 +619,138 @@
           "Pothole"
         ]
       ]
+    },
+    "rent_and_fees": {
+      "category": "leasing_costs",
+      "urgency": "routine",
+      "keywords": [
+        "rent",
+        "fee",
+        "fees",
+        "deposit",
+        "security deposit",
+        "cost",
+        "costs",
+        "price",
+        "pricing",
+        "charge",
+        "charges",
+        "how much",
+        "application fee",
+        "amenity fee",
+        "late fee",
+        "move in cost",
+        "monthly cost"
+      ],
+      "nyc_311": []
+    },
+    "pets": {
+      "category": "leasing_costs",
+      "urgency": "routine",
+      "keywords": [
+        "pet",
+        "pets",
+        "dog",
+        "dogs",
+        "cat",
+        "cats",
+        "puppy",
+        "kitten",
+        "breed",
+        "pet rent",
+        "pet fee",
+        "dog run"
+      ],
+      "nyc_311": []
+    },
+    "parking": {
+      "category": "leasing_costs",
+      "urgency": "routine",
+      "keywords": [
+        "parking",
+        "garage",
+        "parking spot",
+        "parking space",
+        "valet",
+        "ev charging",
+        "charger"
+      ],
+      "nyc_311": []
+    },
+    "utilities": {
+      "category": "leasing_costs",
+      "urgency": "routine",
+      "keywords": [
+        "utilities",
+        "utility",
+        "electric bill",
+        "electricity bill",
+        "water bill",
+        "internet",
+        "wifi",
+        "cable",
+        "trash fee",
+        "garbage fee",
+        "sewer",
+        "con edison",
+        "pg&e"
+      ],
+      "nyc_311": []
+    },
+    "amenities": {
+      "category": "building_life",
+      "urgency": "routine",
+      "keywords": [
+        "amenity",
+        "amenities",
+        "gym",
+        "fitness",
+        "pool",
+        "rooftop",
+        "roof deck",
+        "lounge",
+        "courtyard",
+        "package",
+        "packages",
+        "delivery",
+        "storage",
+        "bike room",
+        "bike storage",
+        "concierge",
+        "doorman",
+        "yoga"
+      ],
+      "nyc_311": []
+    },
+    "moving": {
+      "category": "building_life",
+      "urgency": "routine",
+      "keywords": [
+        "move in",
+        "move out",
+        "moving",
+        "movers",
+        "moving day",
+        "certificate of insurance",
+        "freight elevator",
+        "service elevator"
+      ],
+      "nyc_311": []
+    },
+    "leasing": {
+      "category": "leasing_costs",
+      "urgency": "routine",
+      "keywords": [
+        "lease",
+        "renew",
+        "renewal",
+        "lease term",
+        "sublet",
+        "short term lease",
+        "break my lease",
+        "lease end"
+      ],
+      "nyc_311": []
     }
   }
 }

@@ -1,0 +1,7 @@
+parking_id,property_id,parking_type,spaces,assigned,ev_charging,waitlist,provenance,notes,source_url,observed_on
+P-NYC-001:parking1,P-NYC-001,"Covered garages (6, operated by LAZ Parking)",,False,False,True,listing,24/7 garages with valet and park & lock options,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-002:parking1,P-NYC-002,Covered garage in building,,False,False,False,listing,,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-003:parking1,P-NYC-003,On-site valet garage,,False,True,False,listing,,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-SF-001:parking1,P-SF-001,Two-level underground garage (about 405 stalls),405,False,False,False,listing,Garage shared with retail and office,https://www.essexapartmenthomes.com/apartments/san-francisco/fox-plaza https://s203.q4cdn.com/488215793/files/doc_news/2013/02/1/Essex-Acquires-San-Francisco-Apartment-Community.pdf,2026-10-17
+P-SF-002:parking1,P-SF-002,Assigned surface and tuck-under spaces,60,True,False,True,synthetic,,,2026-10-17
+P-SF-003:parking1,P-SF-003,Underground garage,,False,True,False,listing,EV outlets available,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17

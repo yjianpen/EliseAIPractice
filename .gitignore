@@ -7,6 +7,8 @@ data/processed/
 !data/synthetic/*.csv
 # built SQLite RAG databases (rebuild with: python -m rag.build)
 data/rag/
+# built structured property-facts database (rebuild with: python -m structured.build)
+data/structured/
 *.duckdb
 *.duckdb.wal
 

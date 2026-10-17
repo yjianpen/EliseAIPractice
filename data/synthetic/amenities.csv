@@ -1,0 +1,41 @@
+amenity_id,property_id,amenity,category,hours,reservation_required,fee_id,provenance,source_url,observed_on
+P-NYC-001:01,P-NYC-001,"StuyFitness (3 fitness centers, classes, trainers)",fitness,5 AM - 11 PM,False,P-NYC-001:stuyfitness,listing,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-001:02,P-NYC-001,The Oval Study (library-style co-working space),workspace,7 AM - 11 PM,False,,listing,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-001:03,P-NYC-001,"Oval Services station (self-serve kiosk, equipment rentals)",services,8 AM - 8 PM,False,,listing,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-001:04,P-NYC-001,Smart Package Room,packages,24/7,False,,listing,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-001:05,P-NYC-001,15 playgrounds,outdoor,dawn to dusk,False,,listing,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-001:06,P-NYC-001,Dog run,pets,6 AM - 10 PM,False,,listing,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-001:07,P-NYC-001,Pickleball and athletic courts,outdoor,7 AM - 9 PM,False,,listing,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-001:08,P-NYC-001,Seasonal ice rink and greenmarket,outdoor,seasonal,False,,listing,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-001:09,P-NYC-001,River Room event space,event_space,by reservation,True,,listing,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-001:10,P-NYC-001,In-building storage (Storage Deluxe),storage,24/7,False,P-NYC-001:storage,listing,https://www.stuytown.com/amenities https://www.stuytown.com/amenities/modern-conveniences,2026-10-17
+P-NYC-002:01,P-NYC-002,Concierge,services,24/7,False,,listing,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-002:02,P-NYC-002,Fitness center,fitness,24/7 with key fob,False,P-NYC-002:amenity_fee,listing,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-002:03,P-NYC-002,Package receiving,packages,24/7 at concierge,False,,listing,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-002:04,P-NYC-002,Laundry room,laundry,7 AM - 11 PM,False,,listing,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-002:05,P-NYC-002,Garage parking,parking,24/7,False,P-NYC-002:parking,listing,https://www.apartmentsearch.com/apartments/new-york/manhattan/303-east-83rd,2026-10-17
+P-NYC-003:01,P-NYC-003,Fitness center and yoga studio,fitness,24/7 with key fob,False,P-NYC-003:amenity_fee,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:02,P-NYC-003,Rooftop lounge and sundeck,outdoor,"8 AM - 11 PM, seasonal",False,,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:03,P-NYC-003,Resident lounge and game room,lounge,8 AM - 11 PM,False,,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:04,P-NYC-003,Outdoor grilling areas,outdoor,10 AM - 10 PM,True,,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:05,P-NYC-003,Concierge,services,24/7,False,,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:06,P-NYC-003,Package receiving,packages,24/7 at concierge,False,,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:07,P-NYC-003,Bike storage,storage,24/7,False,,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:08,P-NYC-003,Storage space,storage,by request,False,,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-NYC-003:09,P-NYC-003,Valet parking,parking,24/7,False,P-NYC-003:parking,listing,https://www.apartmentadvisor.com/details/111-lawrence-st-brooklyn-ny-11201,2026-10-17
+P-SF-001:01,P-SF-001,Fitness center,fitness,5 AM - 11 PM,False,,listing,https://www.essexapartmenthomes.com/apartments/san-francisco/fox-plaza https://s203.q4cdn.com/488215793/files/doc_news/2013/02/1/Essex-Acquires-San-Francisco-Apartment-Community.pdf,2026-10-17
+P-SF-001:02,P-SF-001,USPS Post Office on site,services,post office hours,False,,listing,https://www.essexapartmenthomes.com/apartments/san-francisco/fox-plaza https://s203.q4cdn.com/488215793/files/doc_news/2013/02/1/Essex-Acquires-San-Francisco-Apartment-Community.pdf,2026-10-17
+P-SF-001:03,P-SF-001,Package receiving,packages,Mon-Sat 9 AM - 6 PM,False,,listing,https://www.essexapartmenthomes.com/apartments/san-francisco/fox-plaza https://s203.q4cdn.com/488215793/files/doc_news/2013/02/1/Essex-Acquires-San-Francisco-Apartment-Community.pdf,2026-10-17
+P-SF-001:04,P-SF-001,Dry cleaning valet,services,pickup Mon/Thu,False,,listing,https://www.essexapartmenthomes.com/apartments/san-francisco/fox-plaza https://s203.q4cdn.com/488215793/files/doc_news/2013/02/1/Essex-Acquires-San-Francisco-Apartment-Community.pdf,2026-10-17
+P-SF-001:05,P-SF-001,Redwood Credit Union branch,services,branch hours,False,,listing,https://www.essexapartmenthomes.com/apartments/san-francisco/fox-plaza https://s203.q4cdn.com/488215793/files/doc_news/2013/02/1/Essex-Acquires-San-Francisco-Apartment-Community.pdf,2026-10-17
+P-SF-001:06,P-SF-001,Starbucks in building,services,store hours,False,,listing,https://www.essexapartmenthomes.com/apartments/san-francisco/fox-plaza https://s203.q4cdn.com/488215793/files/doc_news/2013/02/1/Essex-Acquires-San-Francisco-Apartment-Community.pdf,2026-10-17
+P-SF-002:01,P-SF-002,In-home washer and dryer,laundry,in unit,False,,listing,https://www.essexapartmenthomes.com/apartments/park-west,2026-10-17
+P-SF-002:02,P-SF-002,Dog run,pets,7 AM - 9 PM,False,,listing,https://www.essexapartmenthomes.com/apartments/park-west,2026-10-17
+P-SF-002:03,P-SF-002,Package lockers,packages,24/7,False,,synthetic,,2026-10-17
+P-SF-003:01,P-SF-003,Fitness center,fitness,24/7 with key fob,False,,listing,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17
+P-SF-003:02,P-SF-003,Bike storage and repair room,storage,24/7,False,,listing,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17
+P-SF-003:03,P-SF-003,Dog run and pet wash station,pets,6 AM - 10 PM,False,,listing,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17
+P-SF-003:04,P-SF-003,Courtyard with outdoor movie screen,outdoor,7 AM - 10 PM,False,,listing,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17
+P-SF-003:05,P-SF-003,"Lounge, terrace, grills and DIY work space",lounge,7 AM - 11 PM,True,,listing,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17
+P-SF-003:06,P-SF-003,Package receiving,packages,24/7 lockers,False,,listing,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17
+P-SF-003:07,P-SF-003,Underground parking with EV outlets,parking,24/7,False,P-SF-003:parking,listing,https://www.apartmentsearch.com/apartments/california/san-francisco/ava-55-ninth https://www.avaloncommunities.com/california/san-francisco-apartments/ava-55-ninth/apartments,2026-10-17

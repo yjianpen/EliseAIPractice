@@ -25,6 +25,8 @@ from datetime import date
 from functools import lru_cache
 from pathlib import Path
 
+from structured.query import facts_for_topics
+
 from .common import (LAWS_DB, POLICIES_DB, SYNTHETIC_DIR, URGENCY_RANK, detect_topics, fts_query, max_urgency,
                      taxonomy)
 
@@ -115,14 +117,18 @@ def _rank(rows: list[sqlite3.Row], lexical: dict[str, float], topics: list[str],
     return hits
 
 
-def search_policies(query: str, property_id: str, k: int = 5, topics: list[str] | None = None) -> list[Hit]:
-    """Guidebook + addendum sections that apply to this property, best first."""
+def search_policies(query: str, property_id: str, k: int = 5, topics: list[str] | None = None,
+                    today: date | None = None) -> list[Hit]:
+    """Guidebook, addendum and building-guide sections that apply to this property on `today`, best first."""
     prop = get_property(property_id)
     topics = topics if topics is not None else detect_topics(query)
-    scope_sql = """(scope = 'property' AND property_id = :pid)
-                   OR (scope = 'company' AND company_id = :cid
-                       AND (cities = 'all' OR ',' || cities || ',' LIKE '%,' || :city || ',%'))"""
-    params = {"pid": property_id, "cid": prop["company_id"], "city": prop["city"]}
+    scope_sql = """((scope = 'property' AND property_id = :pid)
+                    OR (scope = 'company' AND company_id = :cid
+                        AND (cities = 'all' OR ',' || cities || ',' LIKE '%,' || :city || ',%')))
+                   AND (valid_from IS NULL OR valid_from <= :today)
+                   AND (valid_until IS NULL OR valid_until >= :today)"""
+    params = {"pid": property_id, "cid": prop["company_id"], "city": prop["city"],
+              "today": (today or date.today()).isoformat()}
     con = _connect(POLICIES_DB)
     rows = con.execute(f"SELECT * FROM chunks WHERE {scope_sql}", params).fetchall()
     lexical = {}
@@ -136,7 +142,8 @@ def search_policies(query: str, property_id: str, k: int = 5, topics: list[str] 
     ranked = _rank(rows, lexical, topics, "chunk_id", lambda r: POLICY_SCOPE_BONUS[r["scope"]],
                    query, "section", "text", lambda r: r["scope"] != "property")
     return [Hit(id=r["chunk_id"], score=round(s, 3), title=f"{r['doc_title']} > {r['section']}", text=r["text"],
-                topics=t, meta={"scope": r["scope"], "doc_id": r["doc_id"], "version": r["version"],
+                topics=t, meta={"scope": r["scope"], "doc_id": r["doc_id"], "doc_type": r["doc_type"],
+                                "valid_until": r["valid_until"], "version": r["version"],
                                 "source_path": r["source_path"]})
             for s, r, t in ranked[:k]]
 
@@ -192,7 +199,7 @@ def build_context(question: str, property_id: str, unit_id: str | None = None, k
     prop = get_property(property_id)
     topics = detect_topics(question)
     urgency = max_urgency(topics)
-    policies = search_policies(question, property_id, k=k_policies, topics=topics)
+    policies = search_policies(question, property_id, k=k_policies, topics=topics, today=today)
     laws = search_laws(question, prop["city"], prop["state"], k=k_laws, topics=topics)
     ctx = {
         "question": question,
@@ -207,6 +214,9 @@ def build_context(question: str, property_id: str, unit_id: str | None = None, k
         "policies": [dict(label=f"P{i}", **vars(h)) for i, h in enumerate(policies, 1)],
         "laws": [dict(label=f"L{i}", **vars(h)) for i, h in enumerate(laws, 1)],
         "compliance": compliance_records(property_id, {h.id for h in laws}),
+        # exact numbers come from the structured database, never from prose
+        "facts": [dict(label=f"F{i}", **f) for i, f in enumerate(
+            facts_for_topics(property_id, topics, unit_id, as_of=today), 1)],
     }
     if "heat" in topics:
         note = heat_season_note(prop["city"], today)
@@ -242,6 +252,11 @@ def render_context(ctx: dict) -> str:
     for w in ctx["open_work_orders"]:
         out.append(f"OPEN WORK ORDER {w['work_order_id']}: {w['topic']} ({w['urgency']}), status={w['status']}, "
                    f"scheduled_for={w['scheduled_for'] or 'not yet'}")
+    if ctx["facts"]:
+        out.append("\nFACTS (exact values from the property database; quote numbers only from here):")
+        for f in ctx["facts"]:
+            out.append(f"[{f['label']}] {f['title']}")
+            out += [f"  - {line}" for line in f["lines"]]
     out.append("\nPOLICIES (property addendum overrides company guidebook; addendum sections listed first):")
     for h in sorted(ctx["policies"], key=lambda h: h["meta"]["scope"] != "property"):
         out.append(f"[{h['label']}] {h['title']} ({h['meta']['scope']})\n{h['text']}")

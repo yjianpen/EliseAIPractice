@@ -94,7 +94,11 @@ class TestPolicyScoping(TestBase):
         self.assertIn("11:00 PM", addendum.text)  # The Brooklyner differs from the 10 PM default
 
     def test_irrelevant_question_returns_nothing(self):
-        self.assertEqual(search_policies("what time does the gym open", "P-NYC-003"), [])
+        self.assertEqual(search_policies("what is the capital of france", "P-NYC-003"), [])
+
+    def test_amenity_question_finds_amenities_section(self):
+        hits = search_policies("what time does the gym open", "P-NYC-003", today=date(2026, 10, 17))
+        self.assertEqual(hits[0].title, "The Brooklyner - Building Guide (practice) > Amenities")
 
     def test_fts_syntax_is_neutralized(self):
         for q in ['"', 'AND OR NOT', 'NEAR(heat, mold)', "heat* -cold ^title:'x'", ""]:
@@ -232,3 +236,139 @@ class TestSourceOfTruthIntegrity(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestStructuredFacts(TestBase):
+    """Exact numbers live in data/structured/property_facts.db and are queried with SQL, not embeddings."""
+
+    TODAY = date(2026, 10, 17)
+
+    def test_expired_offer_is_excluded(self):
+        from structured.query import fee_schedule
+        codes_now = {f["fee_code"] for f in fee_schedule("P-NYC-002", self.TODAY)}
+        codes_then = {f["fee_code"] for f in fee_schedule("P-NYC-002", date(2025, 9, 15))}
+        self.assertNotIn("security_deposit_special", codes_now)
+        self.assertIn("security_deposit_special", codes_then)
+
+    def test_monthly_cost_is_rent_plus_required_flat_fees(self):
+        from structured.query import monthly_costs
+        studio = next(c for c in monthly_costs("P-NYC-003", self.TODAY) if c["unit_type"] == "Studio")
+        self.assertEqual(studio["required_monthly_fees"], 100 + 5 + 45)  # amenity + billing + water
+        self.assertEqual(studio["total_min"], 3413 + 150)
+
+    def test_pet_and_optional_charges_not_in_required_totals(self):
+        from structured.query import monthly_costs
+        for pid in ("P-SF-001", "P-SF-003"):
+            for c in monthly_costs(pid, self.TODAY):
+                names = {n for n, _ in c["fees"]}
+                self.assertFalse(names & {"Pet rent", "Underground parking", "Underground garage parking"}, names)
+
+    def test_move_in_estimate_adds_up(self):
+        from structured.query import move_in_cost
+        est = move_in_cost("P-SF-003", "1 Bedroom", pets=2, as_of=self.TODAY)
+        self.assertEqual(est["total"], 3450 + 1000 + 55 + 2 * 300)
+
+    def test_sql_is_read_only(self):
+        import sqlite3
+        from structured.query import sql
+        with self.assertRaises(sqlite3.OperationalError):
+            sql("DELETE FROM fees")
+        self.assertGreater(len(sql("SELECT * FROM v_monthly_costs")), 0)
+
+    def test_leases_follow_building_pricing(self):
+        from structured.query import sql
+        bad = sql("""SELECT l.lease_id FROM leases l JOIN units u USING (unit_id)
+                     JOIN unit_types t ON t.property_id = u.property_id AND t.unit_type = u.unit_type
+                     WHERE l.monthly_rent > t.rent_max
+                        OR (l.lease_type = 'market' AND l.monthly_rent < t.rent_min)""")
+        self.assertEqual(bad, [])
+
+    def test_lease_deposits_follow_fee_policy(self):
+        from structured.query import sql
+        bad = sql("""SELECT l.lease_id FROM leases l JOIN units u USING (unit_id)
+                     JOIN fees f ON f.property_id = u.property_id AND f.fee_code = 'security_deposit'
+                     WHERE l.security_deposit != CAST(CASE WHEN f.basis = 'months_of_rent'
+                                                     THEN f.amount * l.monthly_rent ELSE f.amount END AS INTEGER)""")
+        self.assertEqual(bad, [])
+
+    def test_listing_facts_have_sources(self):
+        from structured.query import sql
+        for table in ("fees", "unit_types", "pet_policies", "parking", "utilities", "amenities"):
+            rows = sql(f"SELECT * FROM {table} WHERE provenance = 'listing' AND (source_url IS NULL OR source_url = '')")
+            self.assertEqual(rows, [], table)
+
+    def test_amenity_fee_links_resolve(self):
+        from structured.query import sql
+        self.assertEqual(sql("""SELECT a.amenity_id FROM amenities a LEFT JOIN fees f USING (fee_id)
+                                WHERE a.fee_id IS NOT NULL AND f.fee_id IS NULL"""), [])
+
+
+class TestBuildingGuides(TestBase):
+    TODAY = date(2026, 10, 17)
+
+    def test_no_dollar_amounts_in_prose(self):
+        from rag.common import BUILDINGS_DIR, POLICY_DIR
+        for path in list(POLICY_DIR.rglob("*.md")) + list(BUILDINGS_DIR.glob("*.md")):
+            self.assertNotIn("$", path.read_text(), path)
+
+    def test_guides_point_to_fees_that_exist(self):
+        from synthetic.profiles import PROFILES
+        from rag.common import BUILDINGS_DIR
+        for pid, prof in PROFILES.items():
+            text = (BUILDINGS_DIR / f"{pid}.md").read_text()
+            for f in prof["fees"]:
+                if f["category"] == "pet":
+                    self.assertIn(f["fee_name"].lower(), text, (pid, f["fee_code"]))
+
+    def test_guide_utilities_match_database(self):
+        from structured.query import utilities
+        from rag.common import BUILDINGS_DIR
+        words = {"included": "included in rent", "tenant_direct": "paid by you directly",
+                 "billed_back": "billed by management"}
+        for pid in ("P-NYC-001", "P-SF-002"):
+            text = (BUILDINGS_DIR / f"{pid}.md").read_text()
+            for u in utilities(pid):
+                self.assertIn(words[u["responsibility"]], text, (pid, u["utility"]))
+
+    def test_expired_notices_are_not_retrieved(self):
+        summer = search_policies("concert at the oval", "P-NYC-001", topics=["amenities"], k=50,
+                                 today=date(2026, 7, 10))
+        autumn = search_policies("concert at the oval", "P-NYC-001", topics=["amenities"], k=50, today=self.TODAY)
+        self.assertTrue(any("Summer concert" in h.title for h in summer))
+        self.assertFalse(any("Summer concert" in h.title for h in autumn))
+
+    def test_current_notice_is_retrieved(self):
+        hits = search_policies("is the heat going to be off", "P-NYC-001", today=self.TODAY, k=10)
+        self.assertTrue(any("Steam system maintenance" in h.title for h in hits), [h.title for h in hits])
+
+    def test_guides_only_for_own_property(self):
+        for h in search_policies("packages parking pets amenities", "P-SF-002", k=50, today=self.TODAY,
+                                 topics=["amenities", "parking", "pets"]):
+            if h.meta["doc_type"] == "building_guide":
+                self.assertEqual(h.meta["doc_id"], "building-p-sf-002")
+
+
+class TestFactsInContext(TestBase):
+    TODAY = date(2026, 10, 17)
+
+    def test_fee_question_gets_exact_facts(self):
+        ctx = build_context("how much is the pet fee for my dog?", "P-SF-003", "P-SF-003-2A", today=self.TODAY)
+        text = render_context(ctx)
+        self.assertIn("Pet fee: $300 per pet", text)
+        self.assertIn("FACTS", text)
+
+    def test_garbage_fee_differs_by_city(self):
+        sf = render_context(build_context("is there a garbage fee?", "P-SF-001", today=self.TODAY))
+        ny = render_context(build_context("is there a garbage fee?", "P-NYC-002", today=self.TODAY))
+        self.assertIn("Trash and recycling fee: $25", sf)
+        self.assertIn("trash: included", ny)
+        self.assertNotIn("Trash and recycling fee", ny)
+
+    def test_maintenance_question_has_no_facts(self):
+        ctx = build_context("my radiator is cold", "P-NYC-001", today=self.TODAY)
+        self.assertEqual(ctx["facts"], [])
+
+    def test_resident_sees_own_lease(self):
+        ctx = build_context("when does my lease end and what is my rent?", "P-NYC-003", "P-NYC-003-2A",
+                            today=self.TODAY)
+        self.assertEqual(ctx["facts"][0]["kind"], "lease")

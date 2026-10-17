@@ -8,8 +8,9 @@ real companies' residents, records or policies. The work-order mix follows the N
 311 housing complaints in data/processed/nyc_311.parquet.
 
 Outputs (deterministic for a given --seed):
-  data/synthetic/*.csv                         structured source of truth
+  data/synthetic/*.csv                         structured source of truth (incl. fees, rents, pets, parking)
   knowledge/policies/properties/<id>.md        per-property policy addenda (RAG input)
+  knowledge/buildings/<id>.md                  per-building guides (RAG input, no dollar amounts)
 
 Usage:
   python -m synthetic.generate            # seed 311
@@ -35,6 +36,10 @@ HISTORY_START = date(2025, 11, 1)   # work-order history window
 
 # Real operators and buildings (static snapshot with provenance) - see synthetic/real_entities.py
 from .real_entities import COMPANIES, PROPERTIES  # noqa: E402
+from .profiles import PROFILES  # noqa: E402
+from .property_facts import building_guide_md, structured_rows  # noqa: E402
+
+BUILDINGS_DIR = ROOT / "knowledge" / "buildings"
 
 FIRST = ["Ava", "Mateo", "Sofia", "Liam", "Mei", "Noah", "Aaliyah", "Diego", "Hana", "Omar", "Grace", "Wei",
          "Isabella", "Kwame", "Lucia", "Ethan", "Zara", "Ravi", "Chloe", "Yusuf", "Elena", "Jin", "Maya", "Tomas"]
@@ -89,6 +94,12 @@ def phone(rng: random.Random, area: str) -> str:
     return f"{area}-555-01{rng.randint(10, 99)}"
 
 
+def deposit_for(property_id: str, rent: float) -> int:
+    """Security deposit per the building's fee schedule (flat amount or months of rent)."""
+    f = next(f for f in PROFILES[property_id]["fees"] if f["fee_code"] == "security_deposit")
+    return int(f["amount"] * rent if f["basis"] == "months_of_rent" else f["amount"])
+
+
 def gen_units_tenants_leases(rng: random.Random, s: Store) -> None:
     for p in s.properties:
         area = "718" if p["district"] in ("Brooklyn", "Queens") else "212" if p["city"] == "New York" else "415"
@@ -98,13 +109,15 @@ def gen_units_tenants_leases(rng: random.Random, s: Store) -> None:
             floor = i // per_floor + 1
             letter = "ABCDEFGHJKLMNP"[i % per_floor] if per_floor <= 14 else f"{i % per_floor + 1:02d}"
             unit_id = f"{p['property_id']}-{floor}{letter}"
-            beds = rng.choices([0, 1, 2, 3], weights=[2, 5, 4, 1])[0]
+            types = PROFILES[p["property_id"]]["unit_types"]
+            ut = rng.choices(types, weights=[{0: 2, 1: 5, 2: 4, 3: 1}[t[1]] for t in types])[0]
+            ut_name, beds, baths, smin, smax, rmin, rmax, _ = ut
             occupied = rng.random() > 0.05
             child_u6 = occupied and rng.random() < 0.12
             child_u11 = child_u6 or (occupied and rng.random() < 0.08)
             s.units.append(dict(unit_id=unit_id, property_id=p["property_id"], unit_number=f"{floor}{letter}",
-                                floor=floor, bedrooms=beds, bathrooms=1 if beds < 3 else 2,
-                                sqft=rng.randint(380, 520) + beds * rng.randint(220, 320),
+                                floor=floor, unit_type=ut_name, bedrooms=beds, bathrooms=baths,
+                                sqft=rng.randint(smin, smax),
                                 status="occupied" if occupied else "vacant",
                                 child_under_6_reported=child_u6, child_10_or_under_reported=child_u11))
             if not occupied:
@@ -120,13 +133,14 @@ def gen_units_tenants_leases(rng: random.Random, s: Store) -> None:
             end = start + timedelta(days=30 * months)
             if end < AS_OF:  # renewed
                 start, end = end, end + timedelta(days=365)
-            base = {"Brooklyn": 3600, "Manhattan": 4600, "Civic Center": 2600, "Inner Richmond": 3000,
-                    "SoMa": 3400}[p["district"]]
-            rent = round((base + beds * rng.randint(700, 1100)) * (0.72 if p["rent_regulated"] else 1.0), -1)
+            rent = rng.randint(rmin, rmax)  # within the building's advertised range for this unit type
+            regulated = p["rent_regulated"] and rng.random() < 0.5  # long-time regulated tenants pay less
+            if regulated:
+                rent = round(rent * rng.uniform(0.55, 0.85), -1)
             s.leases.append(dict(lease_id=f"L-{len(s.leases) + 1:05d}", unit_id=unit_id, tenant_id=tid,
                                  start_date=start.isoformat(), end_date=end.isoformat(), monthly_rent=int(rent),
-                                 security_deposit=int(rent), lease_type="rent stabilized" if p["rent_regulated"]
-                                 and p["city"] == "New York" else "rent controlled" if p["rent_regulated"] else "market",
+                                 security_deposit=deposit_for(p["property_id"], rent), lease_type=("rent stabilized" if p["city"] == "New York"
+                                 else "rent controlled") if regulated else "market",
                                  pet_addendum=rng.random() < 0.3, renters_insurance_required=int(p["units"]) >= 100))
 
 
@@ -293,8 +307,8 @@ def addendum_md(p: dict, company: dict) -> str:
               "## Trash, recycling and compost", "<!-- topics: garbage, pests -->",
               f"Trash: {p['trash_days']}. Recycling: {p['recycling_days']}. Bag all food waste; "
               "loose garbage in common areas attracts pests.", "",
-              "## Laundry", "<!-- topics: appliances -->", f"{p['laundry'].capitalize()}.", "",
-              "## Pets and smoking", "<!-- topics: noise -->",
+              "## Laundry", "<!-- topics: appliances, amenities -->", f"{p['laundry'].capitalize()}.", "",
+              "## Pets and smoking", "<!-- topics: pets -->",
               f"Pets: {p['pets']}. Smoking: {p['smoking']}."]
     if p["has_elevator"]:
         lines += ["", "## Elevator", "<!-- topics: elevator -->",
@@ -355,6 +369,14 @@ def main() -> None:
         out = ADDENDA_DIR / f"{p['property_id']}.md"
         out.write_text(addendum_md(p, company[p["company_id"]]))
     print(f"addenda      {len(s.properties):5d} files -> {ADDENDA_DIR.relative_to(ROOT)}/")
+
+    for name, rows in structured_rows(s.properties).items():
+        write_csv(OUT_DIR / f"{name}.csv", rows)
+        print(f"{name:12s} {len(rows):5d} rows -> {(OUT_DIR / f'{name}.csv').relative_to(ROOT)}")
+    BUILDINGS_DIR.mkdir(parents=True, exist_ok=True)
+    for p in s.properties:
+        (BUILDINGS_DIR / f"{p['property_id']}.md").write_text(building_guide_md(p, company[p["company_id"]]))
+    print(f"guides       {len(s.properties):5d} files -> {BUILDINGS_DIR.relative_to(ROOT)}/")
 
 
 if __name__ == "__main__":

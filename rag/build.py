@@ -1,6 +1,6 @@
 """Build the two RAG databases from knowledge/.
 
-  data/rag/policies.db  company guidebooks + property addenda, chunked by "## " section
+  data/rag/policies.db  company guidebooks + property addenda + building guides, chunked by "## " section
   data/rag/laws.db      law records per jurisdiction (federal, state, city)
 
 Both are SQLite files with an FTS5 full-text index (BM25 ranking), so they need no
@@ -16,7 +16,7 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .common import DB_DIR, LAW_DIR, LAWS_DB, POLICIES_DB, POLICY_DIR, ROOT, taxonomy
+from .common import BUILDINGS_DIR, DB_DIR, LAW_DIR, LAWS_DB, POLICIES_DB, POLICY_DIR, ROOT, taxonomy
 
 SECTION_META = re.compile(r"<!--\s*(.*?)\s*-->")
 
@@ -58,9 +58,11 @@ def chunk_policy(path: Path) -> list[dict]:
         else:
             cities = smeta.get("cities", ["all"])
         text = SECTION_META.sub("", rest).strip()
+        posted, expires = smeta.get("posted", [None])[0], smeta.get("expires", [None])[0]
         chunks.append(dict(
             chunk_id=f"{meta['doc_id']}#{i:02d}",
-            doc_id=meta["doc_id"], scope=meta["scope"], company_id=meta["company_id"],
+            doc_id=meta["doc_id"], doc_type=meta.get("doc_type", "policy"), valid_from=posted, valid_until=expires,
+            scope=meta["scope"], company_id=meta["company_id"],
             property_id=meta.get("property_id"), cities=",".join(cities), doc_title=meta["title"],
             version=meta.get("version", ""), section=heading.strip(), topics=" ".join(topics), text=text,
             source_path=str(path.relative_to(ROOT)),
@@ -69,21 +71,26 @@ def chunk_policy(path: Path) -> list[dict]:
 
 
 def build_policies(db_path: Path = POLICIES_DB) -> int:
-    paths = sorted((POLICY_DIR / "companies").glob("*.md")) + sorted((POLICY_DIR / "properties").glob("*.md"))
+    paths = (sorted((POLICY_DIR / "companies").glob("*.md")) + sorted((POLICY_DIR / "properties").glob("*.md"))
+             + sorted(BUILDINGS_DIR.glob("*.md")))
     chunks = [c for p in paths for c in chunk_policy(p)]
     db_path.unlink(missing_ok=True)
     con = sqlite3.connect(db_path)
     con.executescript("""
         CREATE TABLE chunks (
-            chunk_id TEXT PRIMARY KEY, doc_id TEXT, scope TEXT CHECK (scope IN ('company','property')),
+            chunk_id TEXT PRIMARY KEY, doc_id TEXT,
+            doc_type TEXT CHECK (doc_type IN ('policy','building_guide')),
+            valid_from DATE, valid_until DATE,  -- time-limited sections (notices); NULL = always valid
+            scope TEXT CHECK (scope IN ('company','property')),
             company_id TEXT, property_id TEXT, cities TEXT, doc_title TEXT, version TEXT,
             section TEXT, topics TEXT, text TEXT, source_path TEXT);
         CREATE VIRTUAL TABLE chunks_fts USING fts5(
             chunk_id UNINDEXED, section, text, topics, tokenize = 'porter unicode61');
         CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT);
     """)
-    con.executemany("INSERT INTO chunks VALUES (:chunk_id,:doc_id,:scope,:company_id,:property_id,:cities,"
-                    ":doc_title,:version,:section,:topics,:text,:source_path)", chunks)
+    con.executemany("INSERT INTO chunks VALUES (:chunk_id,:doc_id,:doc_type,:valid_from,:valid_until,:scope,"
+                    ":company_id,:property_id,:cities,:doc_title,:version,:section,:topics,:text,:source_path)",
+                    chunks)
     con.executemany("INSERT INTO chunks_fts VALUES (:chunk_id,:section,:text,:topics)", chunks)
     _write_meta(con, "policies", len(chunks), len(paths))
     con.commit()
@@ -144,7 +151,10 @@ def _write_meta(con: sqlite3.Connection, corpus: str, n_rows: int, n_files: int)
 
 
 def build_all() -> tuple[int, int]:
+    """Build both RAG databases and the structured property-facts database."""
+    from structured.build import build as build_structured
     DB_DIR.mkdir(parents=True, exist_ok=True)
+    build_structured()
     return build_policies(), build_laws()
 
 
@@ -152,6 +162,7 @@ def main() -> None:
     n_policy, n_law = build_all()
     print(f"policies.db: {n_policy} chunks -> {POLICIES_DB.relative_to(ROOT)}")
     print(f"laws.db:     {n_law} laws   -> {LAWS_DB.relative_to(ROOT)}")
+    print("property_facts.db (structured) -> data/structured/property_facts.db")
 
 
 if __name__ == "__main__":

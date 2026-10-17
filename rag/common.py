@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 KNOWLEDGE = ROOT / "knowledge"
 POLICY_DIR = KNOWLEDGE / "policies"
+BUILDINGS_DIR = KNOWLEDGE / "buildings"
 LAW_DIR = KNOWLEDGE / "laws"
 SYNTHETIC_DIR = ROOT / "data" / "synthetic"
 DB_DIR = ROOT / "data" / "rag"
@@ -23,6 +24,7 @@ its me my no not of on or our please so that the their them then there these the
 when where which who why will with would you your yours hi hello hey just about any also am im ive
 apartment apartments unit units building buildings landlord landlords tenant tenants resident residents
 property home get got going need want still been really very time times day days today
+open opens opened close closes closed
 """.split()) # last two lines: domain words present in nearly every document, so they only add noise
 
 
@@ -36,13 +38,25 @@ def normalize(text: str) -> str:
 
 
 def detect_topics(text: str) -> list[str]:
-    """Return taxonomy topics whose keywords appear in the text, most specific (longest keyword) first."""
+    """Return taxonomy topics whose keywords appear in the text, most specific (longest keyword) first.
+
+    A match that sits entirely inside a longer match for a different topic is dropped, so
+    "service elevator" (moving) does not also flag an elevator outage and "gas leak" is not a water leak.
+    """
     t = f" {normalize(text)} "
-    hits: dict[str, int] = {}
+    matches = []  # (start, end, topic, length)
     for topic, spec in taxonomy().items():
         for kw in spec["keywords"]:
-            if f" {normalize(kw)} " in t:
-                hits[topic] = max(hits.get(topic, 0), len(kw))
+            needle = f" {normalize(kw)} "
+            start = t.find(needle)
+            while start != -1:
+                matches.append((start, start + len(needle), topic, len(needle)))
+                start = t.find(needle, start + 1)
+    hits: dict[str, int] = {}
+    for s, e, topic, n in matches:
+        inside_longer = any(s2 <= s and e <= e2 and n2 > n and t2 != topic for s2, e2, t2, n2 in matches)
+        if not inside_longer:
+            hits[topic] = max(hits.get(topic, 0), n)
     return sorted(hits, key=lambda k: -hits[k])
 
 

@@ -31,11 +31,11 @@ Quiet hours at 303 East 83rd are 10:00 PM - 7:00 AM. Report repeated noise from 
 Trash: trash chute daily; bulk items by request. Recycling: daily. Bag all food waste; loose garbage in common areas attracts pests.
 
 ## Laundry
-<!-- topics: appliances -->
+<!-- topics: appliances, amenities -->
 Laundry room on lower level.
 
 ## Pets and smoking
-<!-- topics: noise -->
+<!-- topics: pets -->
 Pets: dogs and cats allowed with addendum, max 2. Smoking: smoke-free building.
 
 ## Elevator

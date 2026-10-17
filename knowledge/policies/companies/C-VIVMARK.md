@@ -139,3 +139,35 @@ maintenance line.
 Vivmark will never penalize you for requesting repairs, reporting conditions to the city, or joining a tenant
 association. If you believe a staff member has treated you unfairly after a complaint, contact the regional manager
 at the office email.
+
+## Paying rent and late rent
+<!-- topics: rent_and_fees, leasing | cities: all -->
+Rent is due on the 1st and can be paid in the resident portal by bank transfer (no charge) or card (processor fee applies). A late fee is charged if rent is not received by the 5th; the amount for your community is in its fee schedule. If you expect to be late, message the office before the 1st to set up a payment plan.
+
+## Fees and the fee schedule
+<!-- topics: rent_and_fees | cities: all -->
+Each Vivmark community publishes one fee schedule listing every charge: application, deposits, required monthly charges (such as amenity, trash or utility billing fees), optional services (parking, storage) and pet charges. Advertised rent does not include required monthly charges; the total monthly cost is rent plus those charges. We never add a fee that is not on the schedule.
+
+## Pets
+<!-- topics: pets | cities: all -->
+Most Vivmark communities welcome cats and dogs. Limits on number, size and breed vary by community and are listed in the community profile. Each pet is registered before move-in with a photo and vaccination record. Assistance animals are not pets: no pet charges apply, and requests go through the reasonable accommodation process.
+
+## Parking and storage
+<!-- topics: parking, amenities | cities: all -->
+Parking and storage are optional, month-to-month add-ons where available. Spaces are not guaranteed; join the waitlist in the portal if a community is full. EV charging is offered at select garages.
+
+## Amenity use and reservations
+<!-- topics: amenities | cities: all -->
+Amenities are for residents and their accompanied guests. Spaces marked 'reservation required' are booked in the resident app up to 30 days ahead. Some communities charge a monthly amenity fee; when they do, it is a required charge for all residents and appears on the fee schedule.
+
+## Utilities and monthly statement
+<!-- topics: utilities, garbage | cities: all -->
+Depending on the community, utilities are included, paid by you directly to the provider, or billed by us on your monthly statement. Billed-back charges (for example trash or water and sewer) are itemized every month.
+
+## Lease renewals
+<!-- topics: leasing | cities: all -->
+Renewal offers are sent 60 to 90 days before your lease ends, with term options. If you do not renew, give written notice through the portal by the date in your lease.
+
+## Moving out and deposit return
+<!-- topics: moving, rent_and_fees | cities: all -->
+Schedule a pre-move-out inspection in the last two weeks of your lease. After you return all keys and fobs, we send an itemized statement of any deposit deductions and refund the balance within the timeline required where you live.

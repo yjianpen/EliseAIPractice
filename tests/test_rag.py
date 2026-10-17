@@ -67,19 +67,21 @@ class TestPolicyScoping(TestBase):
     """Policies come only from the property's company (city-appropriate sections) and its own addendum."""
 
     def test_company_isolation(self):
-        for pid in ("P-SF-001", "P-SF-002"):  # Bayline
+        operator = {"P-NYC-001": "beam", "P-NYC-002": "vivmark", "P-NYC-003": "vivmark",
+                    "P-SF-001": "essex", "P-SF-002": "essex", "P-SF-003": "vivmark"}
+        for pid, company in operator.items():
             for h in search_policies("heat leak mold noise pests entry", pid, k=50, topics=list(taxonomy())):
-                self.assertNotIn("lumen", h.meta["doc_id"], (pid, h.id))
-        for pid in ("P-NYC-001", "P-SF-003"):  # Lumen
-            for h in search_policies("heat leak mold noise pests entry", pid, k=50, topics=list(taxonomy())):
-                self.assertNotIn("bayline", h.meta["doc_id"], (pid, h.id))
+                if h.meta["scope"] == "company":
+                    self.assertEqual(h.meta["doc_id"], f"guidebook-c-{company}", (pid, h.id))
 
     def test_same_company_different_city_sections(self):
+        # Vivmark runs P-NYC-002 (Manhattan) and P-SF-003 (San Francisco)
         sf = [h.title for h in search_policies("radiator is cold", "P-SF-003", k=10)]
-        ny = [h.title for h in search_policies("radiator is cold", "P-NYC-001", k=10)]
+        ny = [h.title for h in search_policies("radiator is cold", "P-NYC-002", k=10)]
         self.assertTrue(any("San Francisco" in t for t in sf), sf)
         self.assertFalse(any("New York City" in t for t in sf), sf)
         self.assertTrue(any("New York City" in t for t in ny), ny)
+        self.assertFalse(any("San Francisco" in t for t in ny), ny)
 
     def test_only_own_property_addendum(self):
         for h in search_policies("quiet hours noise", "P-NYC-002", k=20):
@@ -89,7 +91,7 @@ class TestPolicyScoping(TestBase):
     def test_addendum_reflects_property_facts(self):
         hits = search_policies("what are the quiet hours", "P-NYC-003", k=5)
         addendum = next(h for h in hits if h.meta["scope"] == "property")
-        self.assertIn("11:00 PM", addendum.text)  # Hudson Yards Tower differs from the 10 PM default
+        self.assertIn("11:00 PM", addendum.text)  # The Brooklyner differs from the 10 PM default
 
     def test_irrelevant_question_returns_nothing(self):
         self.assertEqual(search_policies("what time does the gym open", "P-NYC-003"), [])
@@ -122,9 +124,51 @@ class TestContext(TestBase):
         self.assertEqual(ctx["urgency"], "city")
 
     def test_compliance_linked_to_retrieved_law(self):
-        ctx = build_context("peeling paint, my 2 year old child lives here", "P-NYC-001", "P-NYC-001-2A")
+        ctx = build_context("peeling paint, my 2 year old child lives here", "P-NYC-001", "P-NYC-001-2A")  # StuyTown, 1947
         self.assertIn("nyc-lead-ll1", [h["id"] for h in ctx["laws"]])
         self.assertTrue(any(c["law_id"] == "nyc-lead-ll1" for c in ctx["compliance"]))
+
+
+class TestRealEntityProvenance(unittest.TestCase):
+    """Real operators/buildings carry sources and a verification date; invented fields are declared."""
+
+    def test_every_company_and_property_has_provenance(self):
+        for r in rows("companies") + rows("properties"):
+            self.assertTrue(r["source_urls"].startswith("https://"), r)
+            self.assertRegex(r["verified_on"], r"^\d{4}-\d{2}-\d{2}$")
+            self.assertTrue(r["verified_fields"], r)
+        for r in rows("properties"):
+            self.assertIn("site_phone", r["synthetic_fields"])
+
+    def test_contacts_are_fictional(self):
+        for r in rows("companies"):
+            self.assertRegex(r["emergency_line"], r"^\d{3}-555-01\d\d$")
+            self.assertTrue(r["office_email"].endswith(".example.com"))
+        for r in rows("properties"):
+            self.assertRegex(r["site_phone"], r"^\d{3}-555-01\d\d$")  # 555-0100..0199 is reserved for fiction
+            self.assertRegex(r["emergency_line"], r"^\d{3}-555-01\d\d$")
+            self.assertEqual(r["emergency_line"][:3] == "415", r["city"] == "San Francisco", r["property_id"])
+            self.assertIn("synthetic", r["site_contact"])
+
+    def test_policy_documents_carry_practice_disclaimer(self):
+        from rag.common import POLICY_DIR
+        for path in POLICY_DIR.rglob("*.md"):
+            text = path.read_text()
+            self.assertIn("SYNTHETIC PRACTICE DOCUMENT", text, path)
+            self.assertIn("(practice)", text.split("title:", 1)[1].splitlines()[0], path)
+
+    def test_modeled_units_do_not_exceed_real_units(self):
+        for r in rows("properties"):
+            self.assertLessEqual(int(r["units_modeled"]), int(r["units"]), r["property_id"])
+        counts = {}
+        for u in rows("units"):
+            counts[u["property_id"]] = counts.get(u["property_id"], 0) + 1
+        for r in rows("properties"):
+            self.assertEqual(counts[r["property_id"]], int(r["units_modeled"]))
+
+    def test_unit_ids_unique(self):
+        ids = [u["unit_id"] for u in rows("units")]
+        self.assertEqual(len(ids), len(set(ids)))
 
 
 class TestSourceOfTruthIntegrity(unittest.TestCase):

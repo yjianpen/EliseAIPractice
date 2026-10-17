@@ -82,7 +82,22 @@ No new dependencies: both databases are SQLite with FTS5 full-text search (BM25)
 ### Adding a city or property
 1. Add `knowledge/laws/<city>.json` (and the state file if new), using taxonomy topics.
 2. Add city-specific sections to the company guidebook with `<!-- topics: ... | cities: <City> -->`.
-3. Add the property to `PROPERTIES` in `synthetic/generate.py`, then run `python -m synthetic.generate && python -m rag.build`.
+3. Add the property to `PROPERTIES` in `synthetic/real_entities.py` (with `source_urls` and `verified_fields`),
+   then run `python -m synthetic.generate && python -m rag.build`.
 
-All companies, buildings, people and phone numbers in `data/synthetic/` and `knowledge/policies/` are fictional.
-Law summaries are for practice, not legal advice; each links to its source.
+### What is real and what is synthetic
+
+| Real (verified, with sources) | Synthetic (invented for practice) |
+|---|---|
+| Operators: Vivmark Residential (AvalonBay + Equity Residential, merged Aug 2026), Beam Living (StuyTown, owned by Blackstone), Essex Property Trust | Guidebooks and addenda in `knowledge/policies/` (marked "practice"; not the companies' actual policies) |
+| Buildings: StuyTown, 303 East 83rd, The Brooklyner, Fox Plaza, Park West, AVA 55 Ninth: name, address, year built, unit count, floors | Building operating details (heat system, quiet hours, trash days, pets), contacts, all phone numbers (reserved 555-01xx range) |
+| | Tenants, leases, work orders, vendors, compliance dates (a modeled sample of units per building) |
+
+Each company and property row carries `source_urls`, `verified_fields`, `synthetic_fields` and `verified_on`
+(see `synthetic/real_entities.py`). Law summaries are for practice, not legal advice; each links to its source.
+
+### Data freshness (next)
+The operator and building facts are a static snapshot taken on `verified_on`. They go stale: AvalonBay and Equity
+Residential became Vivmark Residential in August 2026, and Mosso (900 Folsom St), an Essex property in 2015, is now
+managed by Brookfield. Planned work: re-verify records past a max age, track changes with valid-from/valid-to dates
+instead of overwriting, and surface record age in the agent context so it can hedge or refuse on stale facts.

@@ -1,9 +1,11 @@
 """Generate synthetic "source of truth" data for the property-management agent.
 
-Everything here is fictional: companies, buildings, tenants and phone numbers
-(555-01xx numbers, example.com addresses). The *shape* mirrors what a real
-property-management system holds, and the work-order mix follows the NYC 311
-housing complaints in data/processed/nyc_311.parquet.
+Operators and buildings are REAL (synthetic/real_entities.py, with sources and a
+verified_on date). Everything generated on top of them is SYNTHETIC: tenants, leases,
+work orders, vendors, compliance dates, building operating details, contacts and
+phone numbers (555-01xx numbers, example.com addresses). None of it describes the
+real companies' residents, records or policies. The work-order mix follows the NYC
+311 housing complaints in data/processed/nyc_311.parquet.
 
 Outputs (deterministic for a given --seed):
   data/synthetic/*.csv                         structured source of truth
@@ -31,74 +33,8 @@ TAXONOMY = json.loads((ROOT / "knowledge" / "taxonomy.json").read_text())["topic
 AS_OF = date(2026, 10, 16)          # "today" for statuses and due dates
 HISTORY_START = date(2025, 11, 1)   # work-order history window
 
-# --------------------------------------------------------------------------
-# Companies and properties (hand-written so each one exercises different rules)
-# --------------------------------------------------------------------------
-COMPANIES = [
-    {"company_id": "C-LUMEN", "name": "Lumen Park Residential (synthetic)", "hq_city": "New York",
-     "resident_portal": "https://portal.lumenpark.example.com", "emergency_line": "212-555-0100",
-     "office_email": "residents@lumenpark.example.com"},
-    {"company_id": "C-BAYLINE", "name": "Bayline Homes (synthetic)", "hq_city": "San Francisco",
-     "resident_portal": "https://residents.bayline.example.com", "emergency_line": "415-555-0100",
-     "office_email": "help@bayline.example.com"},
-]
-
-# Each property is chosen to trigger different legal regimes.
-PROPERTIES = [
-    # NYC, pre-1960 walk-up: Local Law 1 lead rules, boiler heat, window guards
-    dict(property_id="P-NYC-001", company_id="C-LUMEN", name="Greenpoint Walk-up", city="New York", state="NY",
-         district="Brooklyn", address="118 Oakfield St, Brooklyn, NY 11222", year_built=1928, units=24, floors=5,
-         has_elevator=False, heat_system="central steam boiler (oil-to-gas conversion 2019)", heat_controlled_by="landlord",
-         hot_water_system="boiler-fired indirect tank", laundry="none on site; laundromat at corner",
-         quiet_hours="10:00 PM - 8:00 AM", trash_days="Mon, Thu (bags out after 8 PM the night before)",
-         recycling_days="Thu", pets="cats allowed; dogs under 25 lb with addendum", smoking="no smoking in common areas",
-         super_name="Marek Nowicki", super_phone="718-555-0111", office_hours="Mon-Fri 9 AM - 5 PM",
-         rent_regulated=True),
-    # NYC, 1985 elevator building, 120 units
-    dict(property_id="P-NYC-002", company_id="C-LUMEN", name="Astoria Gardens", city="New York", state="NY",
-         district="Queens", address="31-40 Linden Ave, Astoria, NY 11106", year_built=1985, units=120, floors=8,
-         has_elevator=True, heat_system="central hot-water boiler with apartment thermostats", heat_controlled_by="landlord",
-         hot_water_system="central gas water heaters", laundry="basement laundry room 7 AM - 10 PM",
-         quiet_hours="10:00 PM - 7:00 AM", trash_days="Tue, Fri (compactor chute 8 AM - 9 PM)", recycling_days="Fri",
-         pets="dogs and cats allowed with addendum, max 2", smoking="smoke-free building",
-         super_name="Luis Ortega", super_phone="718-555-0122", office_hours="Mon-Sat 8 AM - 6 PM", rent_regulated=False),
-    # NYC, new luxury tower
-    dict(property_id="P-NYC-003", company_id="C-LUMEN", name="Hudson Yards Tower", city="New York", state="NY",
-         district="Manhattan", address="455 W 35th St, New York, NY 10001", year_built=2015, units=200, floors=32,
-         has_elevator=True, heat_system="in-unit heat pumps (PTAC), tenant thermostat", heat_controlled_by="tenant",
-         hot_water_system="central high-efficiency boilers", laundry="in-unit washer/dryer",
-         quiet_hours="11:00 PM - 7:00 AM", trash_days="daily chute; bulk items via concierge", recycling_days="daily chute",
-         pets="dogs and cats allowed, pet spa on 3rd floor", smoking="smoke-free building",
-         super_name="Priya Raman (resident manager)", super_phone="212-555-0133", office_hours="daily 8 AM - 8 PM",
-         rent_regulated=False),
-    # SF, 1925 Edwardian flats: pre-1978 federal lead disclosure, landlord heat (70F 24h rule)
-    dict(property_id="P-SF-001", company_id="C-BAYLINE", name="Mission Dolores Flats", city="San Francisco", state="CA",
-         district="Mission", address="2140 Valencia Ct, San Francisco, CA 94110", year_built=1925, units=12, floors=4,
-         has_elevator=False, heat_system="central gas furnace, landlord-controlled", heat_controlled_by="landlord",
-         hot_water_system="shared gas water heater", laundry="coin laundry in garage",
-         quiet_hours="10:00 PM - 7:00 AM", trash_days="Wed (Recology: black, blue, green bins)", recycling_days="Wed",
-         pets="cats only", smoking="no smoking anywhere on property",
-         super_name="Dana Whitfield (on-site manager)", super_phone="415-555-0144", office_hours="Mon-Fri 10 AM - 4 PM",
-         rent_regulated=True),
-    # SF, 2010 mid-rise
-    dict(property_id="P-SF-002", company_id="C-BAYLINE", name="SoMa Commons", city="San Francisco", state="CA",
-         district="SoMa", address="88 Harriet Way, San Francisco, CA 94103", year_built=2010, units=150, floors=9,
-         has_elevator=True, heat_system="in-unit electric wall heaters, tenant thermostat", heat_controlled_by="tenant",
-         hot_water_system="central boilers", laundry="in-unit washer/dryer",
-         quiet_hours="10:00 PM - 8:00 AM", trash_days="trash room daily; Recology pickup Mon/Thu", recycling_days="Mon/Thu",
-         pets="dogs and cats allowed with addendum", smoking="smoke-free building",
-         super_name="Jordan Lee (community manager)", super_phone="415-555-0155", office_hours="daily 9 AM - 6 PM",
-         rent_regulated=False),
-    # SF, 1952 Sunset 6-unit (Lumen also operates in SF -> one company, two cities)
-    dict(property_id="P-SF-003", company_id="C-LUMEN", name="Sunset Terrace", city="San Francisco", state="CA",
-         district="Outer Sunset", address="1530 Noriega Pl, San Francisco, CA 94122", year_built=1952, units=6, floors=2,
-         has_elevator=False, heat_system="individual gas wall furnaces, tenant-controlled", heat_controlled_by="tenant",
-         hot_water_system="individual tank water heaters", laundry="shared washer/dryer in garage",
-         quiet_hours="10:00 PM - 7:00 AM", trash_days="Tue (Recology)", recycling_days="Tue",
-         pets="no pets except service/assistance animals", smoking="no smoking anywhere on property",
-         super_name="Lumen SF maintenance desk", super_phone="415-555-0166", office_hours="Mon-Fri 9 AM - 5 PM",
-         rent_regulated=True),
-]
+# Real operators and buildings (static snapshot with provenance) - see synthetic/real_entities.py
+from .real_entities import COMPANIES, PROPERTIES  # noqa: E402
 
 FIRST = ["Ava", "Mateo", "Sofia", "Liam", "Mei", "Noah", "Aaliyah", "Diego", "Hana", "Omar", "Grace", "Wei",
          "Isabella", "Kwame", "Lucia", "Ethan", "Zara", "Ravi", "Chloe", "Yusuf", "Elena", "Jin", "Maya", "Tomas"]
@@ -156,9 +92,10 @@ def phone(rng: random.Random, area: str) -> str:
 def gen_units_tenants_leases(rng: random.Random, s: Store) -> None:
     for p in s.properties:
         area = "718" if p["district"] in ("Brooklyn", "Queens") else "212" if p["city"] == "New York" else "415"
-        per_floor = max(1, p["units"] // p["floors"])
-        for i in range(p["units"]):
-            floor = min(p["floors"], i // per_floor + 1)
+        n_units = p["units_modeled"]  # sample of the real building's units
+        per_floor = -(-n_units // p["floors"])  # ceil
+        for i in range(n_units):
+            floor = i // per_floor + 1
             letter = "ABCDEFGHJKLMNP"[i % per_floor] if per_floor <= 14 else f"{i % per_floor + 1:02d}"
             unit_id = f"{p['property_id']}-{floor}{letter}"
             beds = rng.choices([0, 1, 2, 3], weights=[2, 5, 4, 1])[0]
@@ -183,14 +120,14 @@ def gen_units_tenants_leases(rng: random.Random, s: Store) -> None:
             end = start + timedelta(days=30 * months)
             if end < AS_OF:  # renewed
                 start, end = end, end + timedelta(days=365)
-            base = {"Brooklyn": 2900, "Queens": 2500, "Manhattan": 4800, "Mission": 3300, "SoMa": 3600,
-                    "Outer Sunset": 2800}[p["district"]]
+            base = {"Brooklyn": 3600, "Manhattan": 4600, "Civic Center": 2600, "Inner Richmond": 3000,
+                    "SoMa": 3400}[p["district"]]
             rent = round((base + beds * rng.randint(700, 1100)) * (0.72 if p["rent_regulated"] else 1.0), -1)
             s.leases.append(dict(lease_id=f"L-{len(s.leases) + 1:05d}", unit_id=unit_id, tenant_id=tid,
                                  start_date=start.isoformat(), end_date=end.isoformat(), monthly_rent=int(rent),
                                  security_deposit=int(rent), lease_type="rent stabilized" if p["rent_regulated"]
                                  and p["city"] == "New York" else "rent controlled" if p["rent_regulated"] else "market",
-                                 pet_addendum=rng.random() < 0.3, renters_insurance_required=p["units"] >= 100))
+                                 pet_addendum=rng.random() < 0.3, renters_insurance_required=int(p["units"]) >= 100))
 
 
 def gen_vendors(rng: random.Random, s: Store) -> None:
@@ -288,6 +225,9 @@ def gen_compliance(rng: random.Random, s: Store) -> None:
             add(p, "Smoke and CO alarm notice/check at turnover", "nyc-smoke-co-alarms", jitter(date(2026, 6, 1)), 365)
             if p["has_elevator"]:
                 add(p, "Elevator periodic inspection", "", jitter(date(2026, 5, 1)), 365)
+            if p["year_built"] < 1978:
+                add(p, "Lead-based paint disclosure + EPA pamphlet at lease signing", "us-lead-disclosure",
+                    jitter(date(2026, 1, 1)), 365)
         else:
             add(p, "Bed bug information notice to new tenants (Civ. Code 1954.603)", "ca-bedbug-notice",
                 jitter(date(2026, 2, 1)), 365, "Give at every new tenancy; tracked annually for audit")
@@ -314,18 +254,22 @@ def addendum_md(p: dict, company: dict) -> str:
         f"property_id: {p['property_id']}",
         f"city: {p['city']}",
         f"state: {p['state']}",
-        f"title: {p['name']} - Property Addendum",
-        "version: 2026-10 (synthetic)",
+        f"title: {p['name']} - Property Addendum (practice)",
+        "version: 2026-10 (synthetic practice document)",
         "---",
         f"# {p['name']} - Property Addendum",
         "",
+        f"> SYNTHETIC PRACTICE DOCUMENT. {p['name']} and {company['name']} are real, but this addendum, its "
+        "operating details and its contacts are invented for interview practice. It is not the operator's actual "
+        "policy and the phone numbers are fictional.",
+        "",
         f"This addendum applies only to {p['name']} ({p['address']}). Where it differs from the "
-        f"{company['name']} Resident Guidebook, this addendum controls.",
+        f"{company['name']} practice guidebook, this addendum controls.",
         "",
         "## Building contacts and emergencies",
         "<!-- topics: gas, water_leak, electrical, elevator, heat, repairs_timeline -->",
-        f"On-site contact: {p['super_name']}, {p['super_phone']}. Office hours: {p['office_hours']}. "
-        f"After hours, call the {company['name']} emergency line at {company['emergency_line']}. "
+        f"On-site contact: {p['site_contact']}, {p['site_phone']}. Office hours: {p['office_hours']}. "
+        f"After hours, call the {company['name']} emergency line at {p['emergency_line']}. "
         "If you smell gas, leave the building first and call 911 from outside, then the gas utility.",
         "",
         "## Heat and hot water at this building",
@@ -363,7 +307,7 @@ def addendum_md(p: dict, company: dict) -> str:
                   "notice asking whether a child under 6 lives in or regularly spends 10+ hours a week in your "
                   "apartment; please return it. Report peeling or chipping paint immediately. Lead work is done "
                   "only by certified workers using safe work practices."]
-    if not nyc and p["year_built"] < 1978:
+    if p["year_built"] < 1978:
         lines += ["", "## Lead paint disclosure (built before 1978)", "<!-- topics: lead, paint_plaster -->",
                   f"{p['name']} was built in {p['year_built']}. Your lease package includes the federal lead "
                   "disclosure form and the EPA lead pamphlet. Report peeling or chipping paint right away; do not "
@@ -374,7 +318,7 @@ def addendum_md(p: dict, company: dict) -> str:
                   "install approved window guards at no charge. Do not remove guards yourself."]
     if p["rent_regulated"]:
         lines += ["", "## Rent regulation", "<!-- topics: retaliation, repairs_timeline -->",
-                  ("Most apartments here are rent stabilized. Rent increases on renewal follow the NYC Rent "
+                  ("Many apartments here are rent stabilized. Rent increases on renewal follow the NYC Rent "
                    "Guidelines Board orders. Questions about your rent history go to the office in writing."
                    if nyc else
                    "This building is covered by the San Francisco Rent Ordinance. Allowable annual increases are set "

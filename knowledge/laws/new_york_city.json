@@ -1,0 +1,106 @@
+{
+  "jurisdiction": {"level": "city", "city": "New York", "state": "NY"},
+  "disclaimer": "Plain-language summaries for an AI assistant to cite. Not legal advice; always link the source.",
+  "laws": [
+    {
+      "id": "nyc-heat",
+      "citation": "NYC Admin. Code § 27-2029 (Housing Maintenance Code)",
+      "title": "Heat requirements during heat season",
+      "topics": ["heat"],
+      "summary": "From October 1 through May 31, owners who supply heat must keep apartments at or above 68F between 6 AM and 10 PM whenever the outdoor temperature falls below 55F, and at or above 62F between 10 PM and 6 AM regardless of outdoor temperature.",
+      "key_points": ["Heat season: Oct 1 - May 31", "Day (6 AM-10 PM): 68F when outside < 55F", "Night (10 PM-6 AM): 62F always", "Heat violations are Class C (immediately hazardous) with no correction grace period"],
+      "source_url": "https://www.nyc.gov/site/hpd/services-and-information/heat-and-hot-water-information.page",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "nyc-hot-water",
+      "citation": "NYC Admin. Code § 27-2031 (Housing Maintenance Code)",
+      "title": "Hot water requirement",
+      "topics": ["hot_water"],
+      "summary": "Owners must provide hot water at a constant minimum of 120F, 365 days a year.",
+      "key_points": ["120F minimum", "Year-round", "Class C violation category"],
+      "source_url": "https://www.nyc.gov/site/hpd/services-and-information/heat-and-hot-water-information.page",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "nyc-violation-classes",
+      "citation": "NYC Admin. Code § 27-2115; HPD violation correction periods",
+      "title": "HPD violation classes and correction deadlines",
+      "topics": ["repairs_timeline", "heat", "hot_water", "lead", "mold", "pests", "window_guards"],
+      "summary": "HPD classifies housing code violations as Class A (non-hazardous, 90 days to correct), Class B (hazardous, 30 days) or Class C (immediately hazardous). Most Class C conditions must be corrected within 24 hours; lead paint, window guards, mold, mice, cockroaches and rats get 21 days; self-closing doors get 14 days; heat and hot water have no grace period. Deadlines run from service of the violation notice.",
+      "key_points": ["A: 90 days", "B: 30 days", "C: 24 hours generally", "C lead/window guards/mold/pests: 21 days", "C self-closing doors: 14 days", "Heat/hot water: immediate"],
+      "source_url": "https://www.nyc.gov/site/hpd/services-and-information/clear-violations.page",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "nyc-allergens-ll55",
+      "citation": "NYC Local Law 55 of 2018; NYC Admin. Code §§ 27-2017 - 27-2017.9",
+      "title": "Indoor allergen hazards (pests and mold)",
+      "topics": ["pests", "mold", "bedbugs"],
+      "summary": "In buildings with 3 or more units, owners must inspect units annually for mice, cockroaches, rats and mold, respond to complaints, clean and verify vacant units are pest- and mold-free before a new tenant moves in, and give tenants the Local Law 55 fact sheet and notice with the lease. Pest work must follow integrated pest management. In buildings with 10+ units, mold over 10 square feet must be assessed and remediated by separate NYS-licensed professionals. Mice, rats and cockroaches are Class C violations (21 days to correct); mold is Class A, B or C depending on area.",
+      "key_points": ["Annual inspection for pests and mold", "Clean vacant units before move-in", "Integrated pest management; licensed applicators only", "10+ units: licensed assessor and separate remediator for mold > 10 sq ft", "Mold: <10 sq ft per room Class A (90 days); 10-29 sq ft Class B (30 days); 30+ sq ft Class C (21 days)"],
+      "source_url": "https://www.nyc.gov/site/hpd/services-and-information/indoor-allergen-hazards-mold-and-pests.page",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "nyc-lead-ll1",
+      "citation": "NYC Local Law 1 of 2004; NYC Admin. Code § 27-2056.1 et seq.",
+      "title": "Lead-based paint hazards in multiple dwellings",
+      "topics": ["lead", "paint_plaster"],
+      "summary": "Applies to multiple dwellings built before 1960 (and 1960-1978 buildings where the owner knows of lead paint) and to tenant-occupied units in pre-1960 one- and two-family houses. Owners must send an annual notice asking whether a child under 6 resides in the unit (10+ hours a week counts), inspect units with such a child and common areas at least annually, repair peeling paint using certified workers and safe work practices, remediate doors and window friction surfaces at turnover, and keep records for 10 years. All painted surfaces in covered buildings had to be XRF-tested by August 2025; untested paint is presumed to contain lead.",
+      "key_points": ["Pre-1960 multiple dwellings", "Annual child-under-6 notice", "Annual inspection where a child under 6 resides", "Turnover work on doors and windows before a new tenant", "Certified workers and safe work practices", "Records kept 10 years"],
+      "source_url": "https://www.nyc.gov/lead-based-paint",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "nyc-bedbug-ll69",
+      "citation": "NYC Local Law 69 of 2017; NYC Admin. Code § 27-2018.1",
+      "title": "Bedbug annual report and tenant disclosure",
+      "topics": ["bedbugs", "pests"],
+      "summary": "Owners must file a bedbug annual report with HPD each December 1-31 covering November 1 through October 31, give tenants the filing receipt at lease start and renewal (or post it in the building within 60 days of filing), and distribute or post the health department's bedbug guide. New tenants must also receive the state bedbug disclosure form covering the prior year's infestation history. Only DEC-licensed pest professionals may treat bedbugs.",
+      "key_points": ["File Dec 1-31 each year", "Receipt to tenants or posted", "Prior-year history disclosed to new tenants", "Licensed exterminators only"],
+      "source_url": "https://www.nyc.gov/site/hpd/services-and-information/bedbugs.page",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "nyc-window-guards",
+      "citation": "NYC Health Code § 131.15",
+      "title": "Window guards",
+      "topics": ["window_guards"],
+      "summary": "In buildings with 3 or more apartments, owners must install and maintain approved window guards on apartment and public hallway windows where a child 10 or younger lives (or when a tenant requests them). Windows giving access to fire escapes are exempt, as are certain first-floor secondary-exit windows. Owners send an annual notice that tenants must return. Missing or broken guards are Class C violations with 21 days to correct.",
+      "key_points": ["Child 10 or younger", "3+ unit buildings", "Fire-escape windows exempt", "Annual notice"],
+      "source_url": "https://www.nyc.gov/assets/doh/downloads/pdf/win/window-guard-gen-info.pdf",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "nyc-smoke-co-alarms",
+      "citation": "NYC Admin. Code Title 28, Art. 312; 28 RCNY § 12-12.1",
+      "title": "Smoke and carbon monoxide alarms",
+      "topics": ["smoke_co_alarms", "gas"],
+      "summary": "Owners must install approved smoke alarms in each apartment and a carbon monoxide alarm within 15 feet of the primary entrance to each sleeping room, and replace them at end of useful life. Tenants must maintain them and replace any that are removed or broken, except devices that fail within one year from a manufacturing defect. Owners may charge up to $25 per battery-operated alarm (up to $50 for a combined smoke/CO unit), payable within a year of installation. For a suspected gas leak: open windows, leave the building without using switches or phones, call 911 from outside, then the gas utility.",
+      "key_points": ["Owner installs smoke + CO alarms", "CO alarm within 15 ft of each sleeping room entrance", "Tenant maintains", "Gas leak: leave, then call 911 and the utility"],
+      "source_url": "https://www.nyc.gov/assets/hpd/downloads/pdfs/services/sample-notice-combined-suspected-gas-leak-smoke-carbon-monoxide.pdf",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "nyc-noise",
+      "citation": "NYC Noise Control Code, NYC Admin. Code Title 24, Chapter 2",
+      "title": "Noise from residences, animals, businesses and construction",
+      "topics": ["noise"],
+      "summary": "The Noise Code prohibits unreasonable noise. Animal noise on residential property is a violation if it continues 10 minutes or more between 7 AM and 10 PM, or 5 minutes or more between 10 PM and 7 AM. Music from commercial establishments may not exceed 42 dBA measured inside a receiving apartment. Routine construction is allowed on weekdays 7 AM to 6 PM; after-hours work needs a permit. Noise complaints are reported to 311.",
+      "key_points": ["Unreasonable noise prohibited", "Animal noise: 10 min (day) / 5 min (night)", "Commercial music: 42 dBA inside an apartment", "Construction: weekdays 7 AM-6 PM", "Report via 311"],
+      "source_url": "https://www.nyc.gov/assets/dep/downloads/pdf/environment/education/nyc-noise-code-fact-sheet.pdf",
+      "verified_on": "2026-10-16"
+    },
+    {
+      "id": "nyc-entry-access",
+      "citation": "NYC Housing Court guidance on emergency access and repairs",
+      "title": "Landlord access for repairs",
+      "topics": ["entry_access"],
+      "summary": "Landlords may enter without advance notice when urgent repairs are needed to prevent injury or property damage (for example smoke, water or gas coming from an apartment). For non-emergency repairs the landlord must give reasonable notice, and tenants must allow reasonable access for repairs, improvements and inspections.",
+      "key_points": ["Emergency: no advance notice needed", "Non-emergency: reasonable notice", "Tenant must give reasonable access"],
+      "source_url": "https://www.nycourts.gov/new-york-city-housing-court/emergency-access-and-repairs",
+      "verified_on": "2026-10-16"
+    }
+  ]
+}

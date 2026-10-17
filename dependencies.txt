@@ -5,3 +5,5 @@
 
 duckdb>=1.5.6      # SQL engine for the 311 CSV/Parquet data
 pandas>=2.2        # DataFrames; DuckDB query results -> .df()
+
+# synthetic/, rag/ and tests/ use only the Python standard library (sqlite3 with FTS5).

@@ -1,0 +1,31 @@
+vendor_id,company_id,city,trade,name,phone,emergency_24h,licensed
+V-001,C-LUMEN,New York,plumber,New Plumber Co. (synthetic),212-555-0148,True,True
+V-002,C-LUMEN,New York,electrician,New Electrician Co. (synthetic),212-555-0174,True,True
+V-003,C-LUMEN,New York,exterminator,New Exterminator Co. (synthetic),212-555-0116,False,True
+V-004,C-LUMEN,New York,boiler_hvac,New Boiler Hvac Co. (synthetic),212-555-0143,True,False
+V-005,C-LUMEN,New York,gas_utility_contractor,New Gas Utility Contractor Co. (synthetic),212-555-0138,True,True
+V-006,C-LUMEN,New York,elevator_contractor,New Elevator Contractor Co. (synthetic),212-555-0141,True,False
+V-007,C-LUMEN,New York,mold_remediation,New Mold Remediation Co. (synthetic),212-555-0167,False,True
+V-008,C-LUMEN,New York,lead_abatement,New Lead Abatement Co. (synthetic),212-555-0152,False,True
+V-009,C-LUMEN,New York,general_handyman,New General Handyman Co. (synthetic),212-555-0123,False,False
+V-010,C-LUMEN,New York,appliance_repair,New Appliance Repair Co. (synthetic),212-555-0116,False,False
+V-011,C-LUMEN,San Francisco,plumber,San Plumber Co. (synthetic),415-555-0185,True,True
+V-012,C-LUMEN,San Francisco,electrician,San Electrician Co. (synthetic),415-555-0145,True,True
+V-013,C-LUMEN,San Francisco,exterminator,San Exterminator Co. (synthetic),415-555-0157,False,True
+V-014,C-LUMEN,San Francisco,boiler_hvac,San Boiler Hvac Co. (synthetic),415-555-0176,True,False
+V-015,C-LUMEN,San Francisco,gas_utility_contractor,San Gas Utility Contractor Co. (synthetic),415-555-0195,True,True
+V-016,C-LUMEN,San Francisco,elevator_contractor,San Elevator Contractor Co. (synthetic),415-555-0158,True,False
+V-017,C-LUMEN,San Francisco,mold_remediation,San Mold Remediation Co. (synthetic),415-555-0119,False,True
+V-018,C-LUMEN,San Francisco,lead_abatement,San Lead Abatement Co. (synthetic),415-555-0194,False,True
+V-019,C-LUMEN,San Francisco,general_handyman,San General Handyman Co. (synthetic),415-555-0114,False,False
+V-020,C-LUMEN,San Francisco,appliance_repair,San Appliance Repair Co. (synthetic),415-555-0136,False,False
+V-021,C-BAYLINE,San Francisco,plumber,San Plumber Co. (synthetic),415-555-0133,True,True
+V-022,C-BAYLINE,San Francisco,electrician,San Electrician Co. (synthetic),415-555-0182,True,True
+V-023,C-BAYLINE,San Francisco,exterminator,San Exterminator Co. (synthetic),415-555-0196,False,True
+V-024,C-BAYLINE,San Francisco,boiler_hvac,San Boiler Hvac Co. (synthetic),415-555-0184,True,False
+V-025,C-BAYLINE,San Francisco,gas_utility_contractor,San Gas Utility Contractor Co. (synthetic),415-555-0147,True,True
+V-026,C-BAYLINE,San Francisco,elevator_contractor,San Elevator Contractor Co. (synthetic),415-555-0144,True,False
+V-027,C-BAYLINE,San Francisco,mold_remediation,San Mold Remediation Co. (synthetic),415-555-0169,False,True
+V-028,C-BAYLINE,San Francisco,lead_abatement,San Lead Abatement Co. (synthetic),415-555-0194,False,True
+V-029,C-BAYLINE,San Francisco,general_handyman,San General Handyman Co. (synthetic),415-555-0174,False,False
+V-030,C-BAYLINE,San Francisco,appliance_repair,San Appliance Repair Co. (synthetic),415-555-0147,False,False

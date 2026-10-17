@@ -20,12 +20,14 @@ SYSTEM_PROMPT = (
     "connect the resident with the leasing office. Answer briefly and politely.")
 
 
-def build_messages(query: UserQuery, history: list[Step]) -> list[dict]:
-    """Chat messages: system prompt, the classified query, then each earlier tool call and its observation."""
+def build_messages(query: UserQuery, history: list[Step], past_turns: list = ()) -> list[dict]:
+    """Chat messages: system prompt, this user's recent turns (conversation memory), the classified query,
+    then each earlier tool call and its observation."""
     known = {k: getattr(query, k) for k in ("incident_type", "intent", "urgency", "property_id", "unit_id")}
     facts = ", ".join(f"{k}={getattr(v, 'value', v)}" for k, v in known.items() if v)
-    messages = [{"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": f"[{facts}]\n{query.text}"}]
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    messages += [{"role": t.role, "content": t.text} for t in past_turns]
+    messages.append({"role": "user", "content": f"[{facts}]\n{query.text}"})
     for i, step in enumerate(history):
         call_id = f"call_{i}"
         messages.append({"role": "assistant", "content": step.thought or None, "tool_calls": [
@@ -35,8 +37,10 @@ def build_messages(query: UserQuery, history: list[Step]) -> list[dict]:
     return messages
 
 
-def make_openai_decide(tool_specs: list[dict] | None = None, model: str | None = None, client=None) -> Decide:
-    """Return a decide() that asks OpenAI for the next Step: one tool call, or the final answer."""
+def make_openai_decide(tool_specs: list[dict] | None = None, model: str | None = None, client=None,
+                       memory=None) -> Decide:
+    """Return a decide() that asks OpenAI for the next Step: one tool call, or the final answer.
+    With a ConversationMemory, the prompt includes the query's tenant's turns from the memory window."""
     if client is None:
         from openai import OpenAI  # imported lazily so tests run without the package or a key
         from config import get_openai_api_key, load_env_file
@@ -46,7 +50,9 @@ def make_openai_decide(tool_specs: list[dict] | None = None, model: str | None =
 
     def decide(query: UserQuery, history: list[Step]) -> Step:
         kwargs = {"tools": tool_specs} if tool_specs else {}
-        response = client.chat.completions.create(model=model, messages=build_messages(query, history), **kwargs)
+        past = memory.recent(query.tenant_id) if memory is not None and query.tenant_id else []
+        messages = build_messages(query, history, past)
+        response = client.chat.completions.create(model=model, messages=messages, **kwargs)
         message, tokens = response.choices[0].message, response.usage.total_tokens
         if message.tool_calls:  # take one tool call per step; the loop runs it and calls us again
             call = message.tool_calls[0]

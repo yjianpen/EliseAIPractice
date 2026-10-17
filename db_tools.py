@@ -9,10 +9,16 @@ Citations are deterministic: the same authorizer records every (table, column) a
 plan (EXPLAIN OpenRead) catches tables the authorizer misses (e.g. count(*) over JOIN ... USING), and each
 successful query appends its source file, record ids and columns to a ledger. Answers cite that ledger,
 never text the model wrote, so a source appears only when the data was actually read.
+
+Row-level lineage: for a simple single-table SELECT the query's own FROM/WHERE is re-run to cite only the
+matching record ids (GROUP BY/HAVING/ORDER BY/LIMIT are ignored, so this may over-cite but never misses a
+row). Anything else (joins, subqueries on other tables, CTEs, compound selects) falls back to citing all of
+the resident's records for each table read, and the entry is marked exact=False.
 """
 from __future__ import annotations
 
 import csv
+import re
 import sqlite3
 from pathlib import Path
 
@@ -24,6 +30,21 @@ TABLES = {  # table the model sees -> (source CSV, column that must match the re
     "my_work_orders": ("work_orders", "tenant_id"),
 }
 MAX_ROWS = 20
+SIMPLE_SELECT = re.compile(  # SELECT ... FROM <table> [[AS] alias] [WHERE ...] [GROUP BY | ORDER BY | LIMIT ...]
+    r"\s*SELECT\b.*?\bFROM\s+(?P<table>\w+)(?P<alias>\s+(?:AS\s+)?(?!(?:WHERE|GROUP|ORDER|LIMIT)\b)\w+)?"
+    r"(?:\s+WHERE\s+(?P<where>.+?))?(?:\s+(?:GROUP\s+BY|ORDER\s+BY|LIMIT)\b.*?)?\s*;?\s*", re.I | re.S)
+
+
+def matching_ids(con: sqlite3.Connection, sql: str, tables: set, id_col: dict) -> list | None:
+    """Record ids of the rows a simple single-table SELECT filters to, or None if lineage can't be derived."""
+    m = SIMPLE_SELECT.fullmatch(sql)
+    if not m or len(tables) != 1 or m["table"] not in tables or re.search(r"\b(UNION|INTERSECT|EXCEPT)\b", sql, re.I):
+        return None
+    where = f" WHERE {m['where']}" if m["where"] else ""
+    try:
+        return [str(r[0]) for r in con.execute(f"SELECT {id_col[m['table']]} FROM {m['table']}{m['alias'] or ''}{where}")]
+    except sqlite3.Error:
+        return None
 
 
 def query_db(con: sqlite3.Connection, sql: str) -> str:
@@ -76,9 +97,13 @@ def make_db_tools(tenant_id: str, data_dir: Path = DATA_DIR) -> tuple[dict, list
         out = query_db(con, sql)
         if not out.startswith("Error") and out != "(no rows)":  # cite only queries that returned data
             plan = {roots.get(row[3]) for row in con.execute(f"EXPLAIN {sql}") if row[1] == "OpenRead"}
-            for table in sorted((plan - {None}) | {t for t, _ in reads}):
-                ledger.append({"source": f"{TABLES[table][0]}.csv", "ids": ids[table],
-                               "columns": sorted(c for t, c in reads if t == table and c)})
+            tables, read = (plan - {None}) | {t for t, _ in reads}, set(reads)  # lineage query adds reads
+            matched = matching_ids(con, sql, tables, {t: cols[0] for t, cols in columns.items()})
+            for table in sorted(tables):
+                hit = set(matched or ())
+                ledger.append({"source": f"{TABLES[table][0]}.csv", "exact": matched is not None,
+                               "ids": ids[table] if matched is None else [i for i in ids[table] if i in hit],
+                               "columns": sorted(c for t, c in read if t == table and c)})
         return out
     return {"query_db": run}, [spec], ledger
 
@@ -87,10 +112,12 @@ def format_citations(ledger: list[dict], max_ids: int = 5) -> str:
     """Render ledger entries as a numbered Sources block, merging repeat reads of the same records."""
     merged: dict[tuple, set] = {}
     for entry in ledger:
-        merged.setdefault((entry["source"], tuple(entry["ids"])), set()).update(entry["columns"])
+        key = (entry["source"], tuple(entry["ids"]), entry.get("exact", True))
+        merged.setdefault(key, set()).update(entry["columns"])
     lines = []
-    for n, ((source, rec_ids), cols) in enumerate(merged.items(), 1):
+    for n, ((source, rec_ids, exact), cols) in enumerate(merged.items(), 1):
         more = f" (+{len(rec_ids) - max_ids} more)" if len(rec_ids) > max_ids else ""
-        lines.append(f"[{n}] {source}: {', '.join(rec_ids[:max_ids]) or 'no records'}{more} - "
+        scope = "" if exact else " (all your records; row lineage unavailable)"
+        lines.append(f"[{n}] {source}: {', '.join(rec_ids[:max_ids]) or 'no records'}{more}{scope} - "
                      f"{', '.join(sorted(cols)) or 'row count'}")
     return "Sources:\n" + "\n".join(lines) if lines else ""

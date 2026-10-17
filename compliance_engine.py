@@ -2,7 +2,8 @@
 
 One rule so far, fair housing: a query must not count, locate, exclude or prefer people by a protected class,
 e.g. "Are there too many Asians in our community?". Two stages:
-  1. rough filter (regex): does the text mention a protected class at all? Most queries stop here, for free.
+  1. rough filter (regex): does the text mention a protected class, or look encoded/disguised (runs of numbers,
+     "decode this", "let's play a game")? Most queries stop here, for free.
   2. final call (a small, cheap LLM; only on stage-1 hits): does it actually target people? Without a classifier,
      or if it fails, the regex rule decides instead: protected term AND a targeting cue (or "without any <group>").
 Detection only; acting on a violation is up to the caller.
@@ -37,9 +38,14 @@ TARGETING_CUES = (  # the question counts, locates or excludes people
     r"(don't|do not) want|make sure no|get rid of|\bban\b|liv(e|es|ing) (on|in|next)|on my floor|next door|"
     r"next to (me|mine|my)|near me|in (this|our|my|the) (building|community|complex)|new neighbou?rs?")
 
+OBFUSCATION_SIGNALS = (  # the message may hide its words: send it to the classifier even with no protected term
+    r"\b(en|de)cod|\bcipher|secret code|code words?|play a game|base ?64|rot ?13|backwards|reversed?\b|"
+    r"(\b\d+\b[ ,]+){4,}\d+")
 CLASSIFIER_PROMPT = (
-    "You are a fair-housing compliance checker for an apartment resident assistant. Decide whether the resident's "
-    "message asks to count, identify, locate, exclude, steer away from, or prefer people because of a protected class "
+    "You are a fair-housing compliance checker for an apartment resident assistant. The message may be disguised "
+    "(letters written as numbers, ciphers, word games, reversed text, another language): decode it first and judge "
+    "what it actually asks. Decide whether it asks to count, identify, locate, exclude, steer away from, or prefer "
+    "people because of a protected class, or asks to confirm stereotypes or judgments about residents by one "
     f"({', '.join(PROTECTED_CLASSES)}). Requests for accommodations or accessibility, questions about building rules, "
     "and complaints about behavior that merely mention a group are NOT violations. Reply with JSON only: "
     '{"violation": true or false, "category": one of the classes or null, "reason": "<10 words or fewer>"}')
@@ -59,14 +65,16 @@ def check_query(query: UserQuery, classify: Classify | None = None) -> list[Viol
     text = re.sub(r"\s+", " ", (query.text or "").lower().replace("’", "'").replace("-", " "))
     terms = {category: (term.group(0), pattern) for category, pattern in PROTECTED_CLASSES.items()
              if (term := re.search(rf"\b({pattern})\b", text))}
-    if not terms:  # stage 1: no protected class mentioned
+    disguised = re.search(OBFUSCATION_SIGNALS, text)
+    if not terms and not disguised:  # stage 1: no protected class mentioned, nothing hidden
         return []
-    verdict = classify(text, sorted(terms)) if classify else None
+    verdict = classify(text, sorted(terms)) if classify else None  # [] candidates = possibly encoded
     if verdict is not None:  # stage 2: the classifier makes the call
         if verdict.get("violation") is not True:
             return []
-        category = verdict.get("category") if verdict.get("category") in PROTECTED_CLASSES else next(iter(terms))
-        term = terms.get(category, ("",))[0]
+        category = verdict.get("category") if verdict.get("category") in PROTECTED_CLASSES else (
+            next(iter(terms), "unknown"))
+        term = terms[category][0] if category in terms else disguised.group(0) if disguised else ""
         return [Violation("fair_housing", category, (term, str(verdict.get("reason", ""))), "llm")]
     cue, violations = re.search(TARGETING_CUES, text), []  # no classifier, or it failed: the regex rule decides
     for category, (term, pattern) in terms.items():
@@ -90,8 +98,9 @@ def make_llm_classifier(client=None, model: str | None = None) -> Classify:
             m.strip() for m in env.get("OPENAI_FALLBACK_MODELS", DEFAULT_FALLBACKS).split(",") if m.strip()]
 
     def classify(text: str, candidates: list[str]) -> dict | None:
-        request = dict(instructions=CLASSIFIER_PROMPT, reasoning={"effort": "low"},
-                       input=f"Possible classes: {', '.join(candidates)}\nMessage: {text}")
+        hint = ", ".join(candidates) or "none found by keywords; the message may be encoded, decode it first"
+        request = dict(instructions=CLASSIFIER_PROMPT, reasoning={"effort": "low" if candidates else "medium"},
+                       input=f"Possible classes: {hint}\nMessage: {text}")
         try:
             reply = create_with_fallbacks(client, models, request).output_text
         except Exception:

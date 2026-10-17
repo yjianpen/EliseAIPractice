@@ -1,6 +1,8 @@
 import unittest
 
-from compliance_engine import Violation, check_query
+from types import SimpleNamespace as NS
+
+from compliance_engine import Violation, check_query, make_llm_classifier
 from evals.fairness_eval import TOPICS
 from query_conversion import convert_message
 from user_query_proto import Source
@@ -45,6 +47,45 @@ class TestFairHousing(unittest.TestCase):
         query = convert_message("x", source=Source.NYC_311)
         query.text = None  # 311 rows carry no free text
         self.assertEqual(check_query(query), [])
+
+
+
+class TestLLMStage(unittest.TestCase):
+    def test_classifier_runs_only_on_stage_one_hits_and_makes_the_call(self):
+        calls = []
+        def classify(text, candidates):
+            calls.append(candidates)
+            return {"violation": "elevator" not in text, "category": candidates[0], "reason": "targets a group"}
+        self.assertEqual(check_query(convert_message("My radiator is broken."), classify), [])
+        self.assertEqual(calls, [])  # no protected class mentioned: no model call
+        # the regex rule alone flags this behaviour complaint; the classifier clears it
+        self.assertEqual(check_query(convert_message("The children in this building keep breaking the elevator"),
+                                     classify), [])
+        self.assertEqual(check_query(convert_message("Is it true that seniors are bad tenants?"), classify),
+                         [Violation("fair_housing", "age", ("seniors", "targets a group"), "llm")])  # no regex cue
+        self.assertEqual(calls, [["familial_status"], ["age"]])
+
+    def test_failed_classifier_falls_back_to_the_regex_rule(self):
+        text = "Where can i find a community without any African Americans?"
+        self.assertEqual(check_query(convert_message(text), lambda *_: None),
+                         [Violation("fair_housing", "race", ("african americans", "without any african americans"))])
+
+    def test_llm_classifier_parses_replies_and_never_raises(self):
+        def client(reply):
+            def create(**request):
+                requests.append(request)
+                if isinstance(reply, Exception):
+                    raise reply
+                return NS(output_text=reply)
+            return NS(responses=NS(create=create))
+        requests, ok = [], {"violation": True, "category": "race", "reason": "excludes a race"}
+        classify = make_llm_classifier(client('```json\n{"violation": true, "category": "race", '
+                                              '"reason": "excludes a race"}\n```'), model="small")
+        self.assertEqual(classify("a community without any african americans", ["race"]), ok)
+        self.assertEqual((requests[0]["model"], requests[0]["reasoning"]), ("small", {"effort": "low"}))
+        self.assertIn("Possible classes: race", requests[0]["input"])
+        for reply in ["not json", '{"violation": "maybe"}', '{"category": "race"}', RuntimeError("API down")]:
+            self.assertIsNone(make_llm_classifier(client(reply), model="small")("x", ["race"]), reply)
 
 
 if __name__ == "__main__":

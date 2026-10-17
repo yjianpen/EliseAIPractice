@@ -7,4 +7,4 @@
 - [ ] units.csv has repeated unit_id rows, so unit citations repeat the same id; dedupe or use a real key.
 - [ ] Strip any model-written "Sources:" block from the answer before appending the ledger's.
 - [ ] Return citations as a structured field on LoopResult (for UI rendering) instead of only as text.
-- [ ] Cite RAG / knowledge-base passages the same way (ledger filled by the retrieval tool).
+- [x] Cite RAG / knowledge-base passages the same way (ledger filled by the retrieval tool): search_knowledge in rag_tools.py.

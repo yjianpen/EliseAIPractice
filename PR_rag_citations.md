@@ -12,6 +12,8 @@ model wrote.
 - Unit-level data (open work orders) is left out of this tool's output, so `query_db` stays the only path to a
   resident's records.
 - `agent.py` chat registers both tools and shares one ledger.
+- Small fix: `query_db` now has a `.close()`, and the DB tests call it on cleanup. This silences the
+  `ResourceWarning: unclosed database` lines the test run used to print.
 
 Changed functions: `make_rag_tools` and its inner `run` (both new); the `agent.py` `__main__` wiring. Tests are in `tests/test_rag_tools.py`.
 
@@ -27,7 +29,7 @@ Custom inputs: pass any tenant id, then one or more questions:
 .venv/bin/python -c "import sys; from rag_tools import make_rag_tools; from db_tools import format_citations; l=[]; t,_=make_rag_tools(sys.argv[1], l); [print(t['search_knowledge'](q)) for q in sys.argv[2:]]; print(format_citations(l))" T-00329 "can i uninstall smoke detector or fire alert by myself?"
 ```
 
-Expected: the Sources block lists `policies.db (knowledge/policies/companies/C-LUMEN.md): guidebook-c-lumen#18 - ... Smoke and carbon monoxide alarms`
+Expected: the unit tests print no `ResourceWarning`, and the Sources block lists `policies.db (knowledge/policies/companies/C-LUMEN.md): guidebook-c-lumen#18 - ... Smoke and carbon monoxide alarms`
 and `laws.db (NYC Admin. Code Title 28, Art. 312; ...): nyc-smoke-co-alarms`.
 
 Full chat with the real model (needs `OPENAI_API_KEY` in `.env`):

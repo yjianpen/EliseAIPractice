@@ -105,6 +105,7 @@ def make_db_tools(tenant_id: str, data_dir: Path = DATA_DIR) -> tuple[dict, list
                                "ids": ids[table] if matched is None else [i for i in ids[table] if i in hit],
                                "columns": sorted(c for t, c in read if t == table and c)})
         return out
+    run.close = con.close  # callers that finish early (tests) can release the database
     return {"query_db": run}, [spec], ledger
 
 
